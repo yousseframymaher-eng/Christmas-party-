@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Party 2026</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #166534; color: #fff; }
+        .festive-gradient { background: linear-gradient(135deg, #b91c1c 0%, #064e3b 100%); }
+        .gold-glow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-4">
+
+    <!-- Mobile Frame Container -->
+    <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col h-[844px]">
+        
+        <!-- App Header -->
+        <header class="festive-gradient p-6 text-center relative shadow-lg">
+            <h1 class="text-2xl font-extrabold text-yellow-300 tracking-wide">🎄 Christmas Gala 🎄</h1>
+            <p class="text-xs text-red-100 mt-1">Dec 25 • 7:00 PM | Grand Ballroom</p>
+        </header>
+
+        <!-- Dynamic Push Notification Banner (Hidden by default) -->
+        <div id="notificationBanner" class="hidden bg-yellow-500 text-gray-950 p-3 mx-4 mt-4 rounded-xl flex items-center justify-between text-xs font-bold animate-bounce shadow-lg">
+            <div class="flex items-center gap-2">
+                <i data-lucide="bell-ring" class="w-4 h-4"></i>
+                <span id="notificationText">Announcement alert!</span>
+            </div>
+            <button onclick="dismissNotification()" class="text-gray-950 hover:opacity-75">✕</button>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 space-y-5 bg-green-900">
+            
+            <!-- Send Push Notification Demo Box -->
+            <div class="bg-gray-800/80 p-4 rounded-2xl border border-gray-700">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i data-lucide="send" class="w-3.5 h-3.5 text-yellow-400"></i> Broadcast Announcement
+                </h3>
+                <div class="flex gap-2">
+                    <input type="text" id="customAlert" placeholder="e.g. Gift exchange starting!" class="bg-gray-900 text-xs text-white rounded-lg px-3 py-2 flex-1 border border-gray-700 focus:outline-none focus:border-yellow-400">
+                    <button onclick="triggerNotification()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-xs font-bold px-3 py-2 rounded-lg transition">Send</button>
+                </div>
+            </div>
+
+            <!-- Feed & Announcements -->
+            <section>
+                <h2 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+                    <i data-lucide="megaphone" class="w-4 h-4 text-red-400"></i> Announcements
+                </h2>
+                <div id="announcementsList" class="space-y-3">
+                    <div class="bg-gray-800 p-3.5 rounded-xl border border-gray-700">
+                        <div class="flex justify-between text-xs text-gray-400 mb-1">
+                            <span class="font-bold text-red-400">Organizer</span>
+                            <span>Just now</span>
+                        </div>
+                        <p class="text-xs text-gray-200">Welcome everyone! Please check in at the front desk with your QR pass.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Event Agenda / Schedule -->
+            <section>
+                <h2 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4 text-green-400"></i> Schedule
+                </h2>
+                <div class="space-y-2 text-xs">
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl border border-gray-800">
+                        <span class="text-yellow-400 font-bold">07:00 PM</span>
+                        <span class="text-gray-200">Welcome Drinks & Red Carpet</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl border border-gray-800">
+                        <span class="text-yellow-400 font-bold">08:30 PM</span>
+                        <span class="text-gray-200">Dinner Buffet & Live Music</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl border border-gray-800">
+                        <span class="text-yellow-400 font-bold">10:00 PM</span>
+                        <span class="text-gray-200">Secret Santa & Party Games</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Digital Entry Pass (QR) -->
+            <section class="bg-gradient-to-r from-red-950 to-gray-800 p-4 rounded-2xl border border-red-900/50 text-center">
+                <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Your Digital Pass</h3>
+                <div class="bg-white p-3 inline-block rounded-xl mb-2 gold-glow">
+                    <!-- Placeholder QR code -->
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=ChristmasPartyGuest2026" alt="Pass QR" class="w-24 h-24">
+                </div>
+                <p class="text-[10px] text-gray-400">Show this code at the reception</p>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bg-gray-950 border-t border-gray-800 p-3 flex justify-around text-gray-400 text-[10px]">
+            <button class="flex flex-col items-center gap-1 text-yellow-400">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span>Home</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 hover:text-white">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+                <span>Agenda</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 hover:text-white">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                <span>Venue</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Interactive Script -->
+    <script>
+        lucide.createIcons();
+
+        function triggerNotification() {
+            const input = document.getElementById('customAlert');
+            const text = input.value.trim() || "🎉 New announcement posted!";
+            
+            // Show notification banner
+            document.getElementById('notificationText').innerText = text;
+            document.getElementById('notificationBanner').classList.remove('hidden');
+
+            // Add item to announcements feed
+            const list = document.getElementById('announcementsList');
+            const newCard = document.createElement('div');
+            newCard.className = 'bg-gray-800 p-3.5 rounded-xl border border-yellow-500/30';
+            newCard.innerHTML = `
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                    <span class="font-bold text-yellow-400">Live Alert</span>
+                    <span>Just now</span>
+                </div>
+                <p class="text-xs text-gray-200">${text}</p>
+            `;
+            list.prepend(newCard);
+            input.value = '';
+        }
+
+        function dismissNotification() {
+            document.getElementById('notificationBanner').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
