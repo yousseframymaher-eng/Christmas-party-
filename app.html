@@ -3,148 +3,865 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Party 2026</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Jingle Bell Gala - Christmas Event App</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xmasRed: {
+                            DEFAULT: '#C41E3A',
+                            dark: '#8B0000',
+                            light: '#E63946',
+                            glow: '#FF4D4D'
+                        },
+                        xmasGreen: {
+                            DEFAULT: '#004B23',
+                            light: '#1B4332',
+                            accent: '#2D6A4F',
+                            bright: '#38B000'
+                        },
+                        xmasGold: {
+                            DEFAULT: '#D4AF37',
+                            light: '#FFD700',
+                            dark: '#AA7C11'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Cinzel"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #166534; color: #fff; }
-        .festive-gradient { background: linear-gradient(135deg, #b91c1c 0%, #064e3b 100%); }
-        .gold-glow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
+        /* Custom Animations & Styles */
+        body {
+            background: radial-gradient(circle at top center, #1b263b 0%, #0d1b2a 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f8fafc;
+        }
+
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-card-dark {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .gold-border-glow {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+        }
+
+        /* Hide scrollbars for smooth app feel */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Phone Frame Glow */
+        .phone-shadow {
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(196, 30, 58, 0.2);
+        }
+
+        /* Notification Banner Animation */
+        @keyframes slideDown {
+            from { transform: translateY(-120%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-120%); opacity: 0; }
+        }
+
+        .toast-enter {
+            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .toast-exit {
+            animation: slideUp 0.3s ease-in forwards;
+        }
+
+        /* Festive Lights Animation */
+        .light-string {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .light-string li {
+            width: 8px;
+            height: 12px;
+            border-radius: 50%;
+            animation-duration: 1.2s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        .light-string li:nth-child(odd) {
+            background: #FF4D4D;
+            box-shadow: 0px 2px 10px #FF4D4D;
+            animation-name: glow-red;
+        }
+
+        .light-string li:nth-child(even) {
+            background: #FFD700;
+            box-shadow: 0px 2px 10px #FFD700;
+            animation-name: glow-gold;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes glow-red {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        @keyframes glow-gold {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
     </style>
 </head>
-<body class="flex justify-center items-center min-h-screen p-4">
+<body class="min-h-screen flex flex-col justify-between items-center p-2 sm:p-6 overflow-x-hidden">
 
-    <!-- Mobile Frame Container -->
-    <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col h-[844px]">
-        
-        <!-- App Header -->
-        <header class="festive-gradient p-6 text-center relative shadow-lg">
-            <h1 class="text-2xl font-extrabold text-yellow-300 tracking-wide">🎄 Christmas Gala 🎄</h1>
-            <p class="text-xs text-red-100 mt-1">Dec 25 • 7:00 PM | Grand Ballroom</p>
-        </header>
-
-        <!-- Dynamic Push Notification Banner (Hidden by default) -->
-        <div id="notificationBanner" class="hidden bg-yellow-500 text-gray-950 p-3 mx-4 mt-4 rounded-xl flex items-center justify-between text-xs font-bold animate-bounce shadow-lg">
-            <div class="flex items-center gap-2">
-                <i data-lucide="bell-ring" class="w-4 h-4"></i>
-                <span id="notificationText">Announcement alert!</span>
+    <!-- Top Admin & Demo Control Bar -->
+    <header class="w-full max-w-4xl mb-4 flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-lg z-30">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-xmasRed to-xmasGold flex items-center justify-center text-white shadow-md">
+                <i class="fa-solid fa-[#000] fa-tree text-lg text-white"></i>
             </div>
-            <button onclick="dismissNotification()" class="text-gray-950 hover:opacity-75">✕</button>
+            <div>
+                <h1 class="font-bold text-sm sm:text-base text-white flex items-center gap-2">
+                    Christmas Party App Demo
+                    <span class="text-xs bg-xmasRed/30 text-xmasRed-light px-2 py-0.5 rounded-full border border-xmasRed/40 font-mono">Live Demo</span>
+                </h1>
+                <p class="text-xs text-slate-400">Preview guest experience & push notifications</p>
+            </div>
         </div>
 
-        <!-- Scrollable Content Area -->
-        <main class="flex-1 overflow-y-auto p-4 space-y-5 bg-green-900">
-            
-            <!-- Send Push Notification Demo Box -->
-            <div class="bg-gray-800/80 p-4 rounded-2xl border border-gray-700">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <i data-lucide="send" class="w-3.5 h-3.5 text-yellow-400"></i> Broadcast Announcement
+        <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="triggerNotification()" class="px-3 py-2 bg-gradient-to-r from-xmasRed to-xmasRed-light hover:from-xmasRed-light hover:to-xmasRed text-white text-xs sm:text-sm font-semibold rounded-xl shadow-lg hover:shadow-xmasRed/30 transition-all flex items-center gap-2 active:scale-95">
+                <i class="fa-solid fa-[#000] fa-bell animate-bounce"></i>
+                Simulate Push Notification
+            </button>
+            <button onclick="openAddModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs sm:text-sm font-medium rounded-xl transition-all flex items-center gap-2 active:scale-95">
+                <i class="fa-solid fa-[#000] fa-plus text-xmasGold"></i>
+                Post Announcement
+            </button>
+            <button onclick="togglePhoneFrame()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs sm:text-sm font-medium rounded-xl transition-all flex items-center gap-2 active:scale-95">
+                <i class="fa-solid fa-[#000] fa-mobile-screen" id="frameToggleIcon"></i>
+                <span id="frameToggleText" class="hidden sm:inline">Toggle Frame</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container for Phone Mockup / Full Screen Mode -->
+    <main class="w-full flex-1 flex items-center justify-center relative py-2">
+
+        <!-- Mobile Frame Wrapper -->
+        <div id="phoneWrapper" class="w-full max-w-[395px] h-[812px] bg-slate-950 rounded-[48px] p-3.5 border-[6px] border-slate-800 phone-shadow relative transition-all duration-300 flex flex-col">
+
+            <!-- iPhone Dynamic Island / Notch -->
+            <div class="w-28 h-5 bg-black absolute top-5 left-1/2 -translate-x-1/2 rounded-full z-50 flex items-center justify-end px-2 gap-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800"></div>
+                <div class="w-2 h-2 rounded-full bg-blue-900/60"></div>
+            </div>
+
+            <!-- Phone Screen Content -->
+            <div class="w-full h-full bg-slate-950 rounded-[38px] overflow-hidden relative flex flex-col border border-slate-800/80">
+
+                <!-- Decorative Christmas String Lights -->
+                <ul class="light-string">
+                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+                </ul>
+
+                <!-- Simulated Mobile Status Bar -->
+                <div class="pt-3 px-6 pb-1 flex justify-between items-center text-[11px] text-slate-300 font-semibold z-40 select-none">
+                    <span>9:41</span>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-[#000] fa-signal text-[10px]"></i>
+                        <i class="fa-solid fa-[#000] fa-wifi text-[10px]"></i>
+                        <i class="fa-solid fa-[#000] fa-battery-full text-xs text-emerald-400"></i>
+                    </div>
+                </div>
+
+                <!-- Simulated Push Notification Toast Popup -->
+                <div id="pushToast" class="hidden absolute top-10 left-3 right-3 bg-slate-900/95 backdrop-blur-xl border border-xmasGold/50 rounded-2xl p-3 shadow-2xl z-50 cursor-pointer" onclick="closeNotification()">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-xmasRed flex items-center justify-center text-white shrink-0 shadow-md">
+                            <i class="fa-solid fa-[#000] fa-gift text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-xmasGold uppercase tracking-wider">Jingle Bell Gala</span>
+                                <span class="text-[9px] text-slate-400">Just now</span>
+                            </div>
+                            <h4 id="toastTitle" class="text-xs font-bold text-white truncate">🎄 Secret Santa Starting Soon!</h4>
+                            <p id="toastBody" class="text-[11px] text-slate-300 leading-tight line-clamp-2 mt-0.5">Gather around the main Christmas tree in 10 minutes for gift exchanges!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Header / App Title Bar -->
+                <div class="px-4 pt-3 pb-3 bg-gradient-to-b from-xmasRed-dark/80 via-slate-950/90 to-transparent relative z-10 shrink-0">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-xmasGold flex items-center gap-1">
+                                <i class="fa-solid fa-[#000] fa-sparkles text-[9px]"></i> Annual Xmas Bash 2026
+                            </span>
+                            <h2 class="text-lg font-extrabold text-white font-display tracking-wide">Jingle Bell Gala</h2>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="relative cursor-pointer" onclick="switchTab('announcements')">
+                                <div class="w-8 h-8 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-200">
+                                    <i class="fa-solid fa-[#000] fa-bell text-xs"></i>
+                                </div>
+                                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-xmasRed rounded-full ring-2 ring-slate-950"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Scrollable App Screen Content Area -->
+                <div class="flex-1 overflow-y-auto no-scrollbar px-3.5 pb-20 relative z-10 space-y-4" id="appMainContent">
+
+                    <!-- TAB 1: ANNOUNCEMENTS & LIVE FEED -->
+                    <div id="tab-announcements" class="space-y-3.5">
+                        
+                        <!-- Event Countdown Banner -->
+                        <div class="relative overflow-hidden rounded-2xl p-4 bg-gradient-to-r from-xmasRed-dark via-xmasGreen-dark to-slate-900 border border-xmasGold/30 shadow-lg">
+                            <div class="absolute -right-4 -bottom-4 text-white/5 text-8xl font-black pointer-events-none">🎅</div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-[10px] font-bold text-xmasGold uppercase tracking-wider">Party Countdown</span>
+                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Tonight
+                                    </span>
+                                </div>
+                                <h3 class="text-sm font-bold text-white mb-2">Grand Opening & Toast</h3>
+                                <div class="grid grid-cols-4 gap-1.5 text-center">
+                                    <div class="bg-black/40 backdrop-blur rounded-lg p-1.5 border border-white/10">
+                                        <span id="cd-hours" class="block text-sm font-extrabold text-xmasGold">02</span>
+                                        <span class="text-[8px] text-slate-400 uppercase">Hours</span>
+                                    </div>
+                                    <div class="bg-black/40 backdrop-blur rounded-lg p-1.5 border border-white/10">
+                                        <span id="cd-mins" class="block text-sm font-extrabold text-white">45</span>
+                                        <span class="text-[8px] text-slate-400 uppercase">Mins</span>
+                                    </div>
+                                    <div class="bg-black/40 backdrop-blur rounded-lg p-1.5 border border-white/10">
+                                        <span id="cd-secs" class="block text-sm font-extrabold text-white">12</span>
+                                        <span class="text-[8px] text-slate-400 uppercase">Secs</span>
+                                    </div>
+                                    <div class="bg-xmasRed/80 backdrop-blur rounded-lg p-1.5 border border-xmasRed-light flex flex-col justify-center items-center">
+                                        <i class="fa-solid fa-[#000] fa-champagne-glasses text-xs text-white"></i>
+                                        <span class="text-[8px] text-white font-bold uppercase mt-0.5">Celebrate</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Announcements Feed -->
+                        <div class="flex items-center justify-between pt-1">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-[#000] fa-bullhorn text-xmasGold text-xs"></i> Live Announcements
+                            </h3>
+                            <span class="text-[10px] text-slate-400">Updated in real-time</span>
+                        </div>
+
+                        <div id="announcementsList" class="space-y-3">
+                            <!-- Card 1 -->
+                            <div class="glass-card rounded-2xl p-3.5 border-l-4 border-l-xmasRed transition-all hover:border-xmasGold">
+                                <div class="flex justify-between items-start mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-xmasRed/20 border border-xmasRed/40 flex items-center justify-center text-xmasRed-light text-xs font-bold">
+                                            🎅
+                                        </div>
+                                        <span class="text-xs font-bold text-white">Party Host (Santa)</span>
+                                    </div>
+                                    <span class="text-[9px] text-slate-400">10 mins ago</span>
+                                </div>
+                                <h4 class="text-xs font-semibold text-xmasGold mb-1">🎁 Secret Santa Gift Exchange Details</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Please place your labeled Secret Santa gifts under the main tree in the Grand Ballroom before 8:30 PM!
+                                </p>
+                                <div class="mt-2.5 flex items-center gap-3 pt-2 border-t border-white/5 text-[10px] text-slate-400">
+                                    <button class="flex items-center gap-1 hover:text-xmasGold transition-colors" onclick="toggleLike(this)">
+                                        <i class="fa-regular fa-[#000] fa-heart"></i> <span>24 Likes</span>
+                                    </button>
+                                    <span class="flex items-center gap-1"><i class="fa-solid fa-[#000] fa-circle-check text-emerald-400"></i> Official Notice</span>
+                                </div>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="glass-card rounded-2xl p-3.5 border-l-4 border-l-xmasGold transition-all hover:border-xmasGold">
+                                <div class="flex justify-between items-start mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-xmasGold/20 border border-xmasGold/40 flex items-center justify-center text-xmasGold text-xs font-bold">
+                                            🍹
+                                        </div>
+                                        <span class="text-xs font-bold text-white">Bar & Dining Team</span>
+                                    </div>
+                                    <span class="text-[9px] text-slate-400">45 mins ago</span>
+                                </div>
+                                <h4 class="text-xs font-semibold text-xmasGold mb-1">🍷 Special Holiday Cocktails Unveiled!</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Head over to the bar for complimentary Spiced Mulled Wine and festive Peppermint Martinis!
+                                </p>
+                                <div class="mt-2.5 flex items-center gap-3 pt-2 border-t border-white/5 text-[10px] text-slate-400">
+                                    <button class="flex items-center gap-1 hover:text-xmasGold transition-colors" onclick="toggleLike(this)">
+                                        <i class="fa-regular fa-[#000] fa-heart"></i> <span>41 Likes</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: SCHEDULE / AGENDA -->
+                    <div id="tab-agenda" class="hidden space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                                <i class="fa-regular fa-[#000] fa-calendar-check text-xmasGold text-xs"></i> Tonight's Timeline
+                            </h3>
+                            <span class="text-[10px] text-xmasGold bg-xmasGold/10 px-2 py-0.5 rounded-full border border-xmasGold/30">Dec 24, 2026</span>
+                        </div>
+
+                        <!-- Timeline Container -->
+                        <div class="relative pl-4 border-l-2 border-slate-800 space-y-4 my-2">
+
+                            <!-- Timeline Item 1 -->
+                            <div class="relative group cursor-pointer" onclick="toggleScheduleDetail('sched1')">
+                                <div class="absolute -left-[21px] top-1.5 w-3.5 h-3.5 rounded-full bg-slate-800 border-2 border-slate-600 group-hover:border-xmasGold transition-colors"></div>
+                                <div class="glass-card rounded-xl p-3 border border-white/10 hover:border-xmasGold/50 transition-all">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[11px] font-extrabold text-xmasGold">7:00 PM</span>
+                                        <span class="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">Lobby</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-white">Welcome Drinks & Red Carpet Entry</h4>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Eggnog, Mulled Wine, and photo booth moments upon arrival.</p>
+                                    <div id="sched1" class="hidden mt-2 pt-2 border-t border-white/5 text-[11px] text-emerald-300">
+                                        📍 Photobooth with Santa props located at Entrance Hall.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 2 (Active/Current) -->
+                            <div class="relative group cursor-pointer" onclick="toggleScheduleDetail('sched2')">
+                                <div class="absolute -left-[21px] top-1.5 w-3.5 h-3.5 rounded-full bg-xmasRed border-2 border-xmasGold animate-ping"></div>
+                                <div class="absolute -left-[21px] top-1.5 w-3.5 h-3.5 rounded-full bg-xmasRed border-2 border-xmasGold"></div>
+                                <div class="glass-card rounded-xl p-3 border border-xmasGold/60 bg-gradient-to-r from-xmasRed/20 to-transparent">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[11px] font-extrabold text-xmasGold flex items-center gap-1">
+                                            8:00 PM <span class="text-[8px] bg-xmasRed text-white px-1.5 py-0.2 rounded font-bold uppercase">Now</span>
+                                        </span>
+                                        <span class="text-[9px] bg-xmasGold/20 text-xmasGold px-2 py-0.5 rounded-full border border-xmasGold/30">Grand Hall</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-white">Christmas Feast & Live Jazz Quartet</h4>
+                                    <p class="text-[11px] text-slate-300 mt-0.5">Gourmet holiday buffet featuring roast turkey, desserts & festive jazz.</p>
+                                    <div id="sched2" class="mt-2 pt-2 border-t border-white/10 text-[11px] text-slate-200">
+                                        ✨ Special performance by The Holiday Brass Quintet.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 3 -->
+                            <div class="relative group cursor-pointer" onclick="toggleScheduleDetail('sched3')">
+                                <div class="absolute -left-[21px] top-1.5 w-3.5 h-3.5 rounded-full bg-slate-800 border-2 border-slate-600 group-hover:border-xmasGold transition-colors"></div>
+                                <div class="glass-card rounded-xl p-3 border border-white/10 hover:border-xmasGold/50 transition-all">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[11px] font-extrabold text-xmasGold">9:30 PM</span>
+                                        <span class="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">Main Stage</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-white">Secret Santa Exchange & Raffle</h4>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Gift unwrapping and announcement of the holiday raffle winner!</p>
+                                    <div id="sched3" class="hidden mt-2 pt-2 border-t border-white/5 text-[11px] text-emerald-300">
+                                        🎁 Ensure your pass code was scanned at entry for the raffle.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 4 -->
+                            <div class="relative group cursor-pointer" onclick="toggleScheduleDetail('sched4')">
+                                <div class="absolute -left-[21px] top-1.5 w-3.5 h-3.5 rounded-full bg-slate-800 border-2 border-slate-600 group-hover:border-xmasGold transition-colors"></div>
+                                <div class="glass-card rounded-xl p-3 border border-white/10 hover:border-xmasGold/50 transition-all">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[11px] font-extrabold text-xmasGold">11:55 PM</span>
+                                        <span class="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">All Venue</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-white">Midnight Countdown & Champagne Toast</h4>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Ring in Christmas day together with snow fall simulator & fireworks!</p>
+                                    <div id="sched4" class="hidden mt-2 pt-2 border-t border-white/5 text-[11px] text-emerald-300">
+                                        🥂 Champagne glasses will be distributed at 11:45 PM.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: VENUE & MAP -->
+                    <div id="tab-venue" class="hidden space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-[#000] fa-location-dot text-xmasRed text-xs"></i> Venue & Directions
+                            </h3>
+                        </div>
+
+                        <!-- Venue Card -->
+                        <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+                            <!-- Simulated Styled Map Preview -->
+                            <div class="h-36 bg-slate-800 relative flex items-center justify-center overflow-hidden border-b border-white/10">
+                                <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:12px_12px]"></div>
+                                <!-- Mock Map Roads -->
+                                <div class="absolute w-full h-3 bg-slate-700 top-1/2 -rotate-12"></div>
+                                <div class="absolute h-full w-3 bg-slate-700 left-1/2 -rotate-12"></div>
+                                <!-- Map Pin Container -->
+                                <div class="relative z-10 flex flex-col items-center animate-bounce">
+                                    <div class="bg-xmasRed text-white px-2.5 py-1 rounded-full text-[10px] font-bold shadow-lg border border-xmasGold flex items-center gap-1">
+                                        <i class="fa-solid fa-[#000] fa-tree"></i> Grand Palace Hotel
+                                    </div>
+                                    <div class="w-2 h-2 bg-xmasRed rotate-45 -mt-1"></div>
+                                </div>
+                            </div>
+
+                            <div class="p-3.5 space-y-2">
+                                <div>
+                                    <h4 class="text-sm font-extrabold text-white">The Grand Winter Palace Ballroom</h4>
+                                    <p class="text-xs text-slate-300">777 Festive Avenue, North Pole District, NY 10001</p>
+                                </div>
+
+                                <div class="pt-2 border-t border-white/10 grid grid-cols-2 gap-2 text-[11px]">
+                                    <div class="bg-slate-900/60 p-2 rounded-xl border border-white/5">
+                                        <span class="block text-slate-400 text-[9px] uppercase font-semibold">Valet Parking</span>
+                                        <span class="text-emerald-400 font-bold">Complimentary</span>
+                                    </div>
+                                    <div class="bg-slate-900/60 p-2 rounded-xl border border-white/5">
+                                        <span class="block text-slate-400 text-[9px] uppercase font-semibold">Dress Code</span>
+                                        <span class="text-xmasGold font-bold">Festive Elegant</span>
+                                    </div>
+                                </div>
+
+                                <button onclick="openGoogleMapsSim()" class="w-full mt-2 py-2.5 bg-gradient-to-r from-emerald-700 to-xmasGreen-accent hover:from-xmasGreen-accent hover:to-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-95">
+                                    <i class="fa-solid fa-[#000] fa-map-location-dot"></i>
+                                    Open in Google Maps
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Venue Amenities -->
+                        <div class="glass-card rounded-2xl p-3 space-y-2">
+                            <h4 class="text-xs font-bold text-xmasGold uppercase tracking-wider">Party Facilities</h4>
+                            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-[#000] fa-wifi text-xmasGold"></i> Guest Wi-Fi: <span class="text-white font-mono">XmasMagic2026</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-[#000] fa-shirt text-xmasGold"></i> Coat Check: Ground Floor
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: RSVP & QR PASS -->
+                    <div id="tab-pass" class="hidden space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-[#000] fa-ticket text-xmasGold text-xs"></i> Digital Entry Pass
+                            </h3>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 font-bold">Confirmed VIP</span>
+                        </div>
+
+                        <!-- Interactive Pass Card -->
+                        <div class="glass-card-dark rounded-3xl p-4 border border-xmasGold/40 gold-border-glow text-center space-y-3 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-xmasRed/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                            <!-- Pass Header -->
+                            <div>
+                                <span class="text-[9px] uppercase tracking-widest text-xmasGold font-bold">Official Event Pass</span>
+                                <h3 class="text-base font-extrabold text-white font-display">Alexander Wright</h3>
+                                <p class="text-[10px] text-slate-400">Guest Pass #XMAS-2026-992</p>
+                            </div>
+
+                            <!-- Interactive QR Code Container -->
+                            <div class="bg-white p-3 rounded-2xl inline-block shadow-xl relative group cursor-pointer" onclick="refreshQR()">
+                                <div id="qrCodeBox" class="w-36 h-36 bg-slate-900 rounded-xl flex items-center justify-center p-2 relative overflow-hidden">
+                                    <!-- Stylized Simulated QR pattern -->
+                                    <div class="w-full h-full border-4 border-slate-900 grid grid-cols-5 gap-1 bg-white p-1 rounded">
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-white"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                        <div class="bg-slate-900 rounded-sm"></div>
+                                    </div>
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
+                                        <span class="text-[10px] text-white font-bold bg-xmasRed px-2 py-1 rounded">Tap to Refresh</span>
+                                    </div>
+                                </div>
+                                <p class="text-[9px] text-slate-500 mt-1 font-semibold">Scan at entrance for fast check-in</p>
+                            </div>
+
+                            <!-- RSVP Status Controls -->
+                            <div class="pt-2 border-t border-white/10 space-y-2">
+                                <span class="text-[11px] text-slate-300 block font-medium">Update RSVP Status:</span>
+                                <div class="grid grid-cols-3 gap-1.5" id="rsvpBtnGroup">
+                                    <button onclick="setRSVP('Yes')" id="rsvpYes" class="py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white border border-emerald-400 shadow-sm transition-all">
+                                        Attending
+                                    </button>
+                                    <button onclick="setRSVP('Maybe')" id="rsvpMaybe" class="py-1.5 rounded-xl text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 transition-all hover:bg-slate-700">
+                                        Maybe
+                                    </button>
+                                    <button onclick="setRSVP('No')" id="rsvpNo" class="py-1.5 rounded-xl text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 transition-all hover:bg-slate-700">
+                                        Declined
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Navigation Bar -->
+                <nav class="absolute bottom-0 left-0 right-0 h-16 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/80 px-3 flex items-center justify-around z-30">
+                    <button onclick="switchTab('announcements')" id="nav-announcements" class="flex flex-col items-center gap-0.5 text-xmasGold transition-colors">
+                        <i class="fa-solid fa-[#000] fa-house-chimney text-base"></i>
+                        <span class="text-[10px] font-bold">Feed</span>
+                    </button>
+                    <button onclick="switchTab('agenda')" id="nav-agenda" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition-colors">
+                        <i class="fa-regular fa-[#000] fa-calendar-check text-base"></i>
+                        <span class="text-[10px] font-medium">Agenda</span>
+                    </button>
+                    <button onclick="switchTab('venue')" id="nav-venue" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition-colors">
+                        <i class="fa-solid fa-[#000] fa-location-dot text-base"></i>
+                        <span class="text-[10px] font-medium">Venue</span>
+                    </button>
+                    <button onclick="switchTab('pass')" id="nav-pass" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition-colors">
+                        <i class="fa-solid fa-[#000] fa-qrcode text-base"></i>
+                        <span class="text-[10px] font-medium">My Pass</span>
+                    </button>
+                </nav>
+
+                <!-- iPhone Home Indicator Bar -->
+                <div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-700 rounded-full z-40"></div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Add Announcement (Admin Demo) -->
+    <div id="addModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-xmasGold/40 w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-[#000] fa-bullhorn text-xmasGold"></i> Post New Announcement
                 </h3>
-                <div class="flex gap-2">
-                    <input type="text" id="customAlert" placeholder="e.g. Gift exchange starting!" class="bg-gray-900 text-xs text-white rounded-lg px-3 py-2 flex-1 border border-gray-700 focus:outline-none focus:border-yellow-400">
-                    <button onclick="triggerNotification()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-xs font-bold px-3 py-2 rounded-lg transition">Send</button>
+                <button onclick="closeAddModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-[#000] fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-300 font-semibold mb-1">Title</label>
+                    <input type="text" id="newTitle" placeholder="e.g. Dessert Buffet Now Open!" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-xmasGold">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 font-semibold mb-1">Announcement Details</label>
+                    <textarea id="newBody" rows="3" placeholder="Write details for party guests..." class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-xmasGold"></textarea>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="sendPushCheck" class="rounded accent-xmasRed" checked>
+                    <label for="sendPushCheck" class="text-xs text-slate-300">Send Instant Push Notification to all guests</label>
                 </div>
             </div>
 
-            <!-- Feed & Announcements -->
-            <section>
-                <h2 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
-                    <i data-lucide="megaphone" class="w-4 h-4 text-red-400"></i> Announcements
-                </h2>
-                <div id="announcementsList" class="space-y-3">
-                    <div class="bg-gray-800 p-3.5 rounded-xl border border-gray-700">
-                        <div class="flex justify-between text-xs text-gray-400 mb-1">
-                            <span class="font-bold text-red-400">Organizer</span>
-                            <span>Just now</span>
-                        </div>
-                        <p class="text-xs text-gray-200">Welcome everyone! Please check in at the front desk with your QR pass.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Event Agenda / Schedule -->
-            <section>
-                <h2 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
-                    <i data-lucide="calendar" class="w-4 h-4 text-green-400"></i> Schedule
-                </h2>
-                <div class="space-y-2 text-xs">
-                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl border border-gray-800">
-                        <span class="text-yellow-400 font-bold">07:00 PM</span>
-                        <span class="text-gray-200">Welcome Drinks & Red Carpet</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl border border-gray-800">
-                        <span class="text-yellow-400 font-bold">08:30 PM</span>
-                        <span class="text-gray-200">Dinner Buffet & Live Music</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl border border-gray-800">
-                        <span class="text-yellow-400 font-bold">10:00 PM</span>
-                        <span class="text-gray-200">Secret Santa & Party Games</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Digital Entry Pass (QR) -->
-            <section class="bg-gradient-to-r from-red-950 to-gray-800 p-4 rounded-2xl border border-red-900/50 text-center">
-                <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Your Digital Pass</h3>
-                <div class="bg-white p-3 inline-block rounded-xl mb-2 gold-glow">
-                    <!-- Placeholder QR code -->
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=ChristmasPartyGuest2026" alt="Pass QR" class="w-24 h-24">
-                </div>
-                <p class="text-[10px] text-gray-400">Show this code at the reception</p>
-            </section>
-
-        </main>
-
-        <!-- Bottom Navigation Bar -->
-        <nav class="bg-gray-950 border-t border-gray-800 p-3 flex justify-around text-gray-400 text-[10px]">
-            <button class="flex flex-col items-center gap-1 text-yellow-400">
-                <i data-lucide="home" class="w-5 h-5"></i>
-                <span>Home</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 hover:text-white">
-                <i data-lucide="clock" class="w-5 h-5"></i>
-                <span>Agenda</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 hover:text-white">
-                <i data-lucide="map-pin" class="w-5 h-5"></i>
-                <span>Venue</span>
-            </button>
-        </nav>
+            <div class="flex items-center gap-2 pt-2">
+                <button onclick="closeAddModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition-all">Cancel</button>
+                <button onclick="publishAnnouncement()" class="flex-1 py-2.5 bg-gradient-to-r from-xmasRed to-xmasRed-light text-white text-xs font-bold rounded-xl shadow-lg transition-all active:scale-95">Publish Now</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Interactive Script -->
+    <!-- Toast Banner Script & Interactive Features -->
     <script>
-        lucide.createIcons();
+        // Tab Navigation Switcher Logic
+        function switchTab(tabName) {
+            const tabs = ['announcements', 'agenda', 'venue', 'pass'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${t}`);
+                navBtn.classList.remove('text-xmasGold');
+                navBtn.classList.add('text-slate-400');
+                navBtn.querySelector('span').classList.remove('font-bold');
+                navBtn.querySelector('span').classList.add('font-medium');
+            });
 
-        function triggerNotification() {
-            const input = document.getElementById('customAlert');
-            const text = input.value.trim() || "🎉 New announcement posted!";
-            
-            // Show notification banner
-            document.getElementById('notificationText').innerText = text;
-            document.getElementById('notificationBanner').classList.remove('hidden');
+            // Active Tab
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            activeBtn.classList.add('text-xmasGold');
+            activeBtn.classList.remove('text-slate-400');
+            activeBtn.querySelector('span').classList.add('font-bold');
+            activeBtn.querySelector('span').classList.remove('font-medium');
+        }
 
-            // Add item to announcements feed
+        // Demo Push Notification Trigger
+        const sampleNotifications = [
+            { title: "🎁 Secret Santa Starting!", body: "Gather around the Christmas tree in 5 minutes!" },
+            { title: "🍷 Special Cocktail Alert", body: "Fresh Spiced Mulled Wine served at Bar #1!" },
+            { title: "📸 Photo Booth Contest", body: "Upload your best festive costume photo!" },
+            { title: "🎄 Welcome to the Gala!", body: "Enjoy unlimited drinks and live jazz music!" }
+        ];
+
+        let notifIndex = 0;
+
+        function triggerNotification(customTitle = null, customBody = null) {
+            const toast = document.getElementById('pushToast');
+            const titleEl = document.getElementById('toastTitle');
+            const bodyEl = document.getElementById('toastBody');
+
+            const notif = customTitle ? { title: customTitle, body: customBody } : sampleNotifications[notifIndex % sampleNotifications.length];
+            if (!customTitle) notifIndex++;
+
+            titleEl.textContent = notif.title;
+            bodyEl.textContent = notif.body;
+
+            toast.classList.remove('hidden', 'toast-exit');
+            toast.classList.add('toast-enter');
+
+            // Play simulated subtle sound effect if supported
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 note
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch(e) {}
+
+            // Auto dismiss after 4 seconds
+            setTimeout(() => {
+                closeNotification();
+            }, 4000);
+        }
+
+        function closeNotification() {
+            const toast = document.getElementById('pushToast');
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-exit');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 300);
+        }
+
+        // RSVP Buttons Logic
+        function setRSVP(status) {
+            const btnYes = document.getElementById('rsvpYes');
+            const btnMaybe = document.getElementById('rsvpMaybe');
+            const btnNo = document.getElementById('rsvpNo');
+
+            [btnYes, btnMaybe, btnNo].forEach(b => {
+                b.className = "py-1.5 rounded-xl text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700 transition-all hover:bg-slate-700";
+            });
+
+            if (status === 'Yes') {
+                btnYes.className = "py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white border border-emerald-400 shadow-sm transition-all";
+                triggerNotification("✅ RSVP Confirmed!", "Your VIP Pass is ready for entry.");
+            } else if (status === 'Maybe') {
+                btnMaybe.className = "py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white border border-amber-400 shadow-sm transition-all";
+            } else {
+                btnNo.className = "py-1.5 rounded-xl text-xs font-bold bg-xmasRed text-white border border-xmasRed-light shadow-sm transition-all";
+            }
+        }
+
+        // Add Announcement Modal Logic
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+        }
+
+        function publishAnnouncement() {
+            const title = document.getElementById('newTitle').value.trim();
+            const body = document.getElementById('newBody').value.trim();
+            const sendPush = document.getElementById('sendPushCheck').checked;
+
+            if (!title || !body) {
+                alert("Please fill in both title and announcement text.");
+                return;
+            }
+
             const list = document.getElementById('announcementsList');
             const newCard = document.createElement('div');
-            newCard.className = 'bg-gray-800 p-3.5 rounded-xl border border-yellow-500/30';
+            newCard.className = "glass-card rounded-2xl p-3.5 border-l-4 border-l-emerald-500 transition-all hover:border-xmasGold animate-pulse";
             newCard.innerHTML = `
-                <div class="flex justify-between text-xs text-gray-400 mb-1">
-                    <span class="font-bold text-yellow-400">Live Alert</span>
-                    <span>Just now</span>
+                <div class="flex justify-between items-start mb-1.5">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xs font-bold">
+                            📣
+                        </div>
+                        <span class="text-xs font-bold text-white">Event Admin</span>
+                    </div>
+                    <span class="text-[9px] text-slate-400">Just now</span>
                 </div>
-                <p class="text-xs text-gray-200">${text}</p>
+                <h4 class="text-xs font-semibold text-xmasGold mb-1">${title}</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">${body}</p>
+                <div class="mt-2.5 flex items-center gap-3 pt-2 border-t border-white/5 text-[10px] text-slate-400">
+                    <button class="flex items-center gap-1 hover:text-xmasGold transition-colors" onclick="toggleLike(this)">
+                        <i class="fa-regular fa-[#000] fa-heart"></i> <span>0 Likes</span>
+                    </button>
+                    <span class="text-emerald-400 font-semibold">• Just Posted</span>
+                </div>
             `;
+
             list.prepend(newCard);
-            input.value = '';
+            setTimeout(() => newCard.classList.remove('animate-pulse'), 1500);
+
+            closeAddModal();
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newBody').value = '';
+
+            // Switch to announcements feed tab
+            switchTab('announcements');
+
+            if (sendPush) {
+                setTimeout(() => {
+                    triggerNotification(title, body);
+                }, 500);
+            }
         }
 
-        function dismissNotification() {
-            document.getElementById('notificationBanner').classList.add('hidden');
+        // Toggle Expandable Schedule Item
+        function toggleScheduleDetail(id) {
+            const elem = document.getElementById(id);
+            if (elem.classList.contains('hidden')) {
+                elem.classList.remove('hidden');
+            } else {
+                elem.classList.add('hidden');
+            }
         }
+
+        // Toggle Like Button
+        function toggleLike(btn) {
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('span');
+            let count = parseInt(span.textContent);
+
+            if (icon.classList.contains('fa-regular')) {
+                icon.className = "fa-solid fa-[#000] fa-heart text-xmasRed";
+                span.textContent = `${count + 1} Likes`;
+            } else {
+                icon.className = "fa-regular fa-[#000] fa-heart";
+                span.textContent = `${Math.max(0, count - 1)} Likes`;
+            }
+        }
+
+        // Simulate Frame Toggle
+        let isFramed = true;
+        function togglePhoneFrame() {
+            const wrapper = document.getElementById('phoneWrapper');
+            const icon = document.getElementById('frameToggleIcon');
+            const text = document.getElementById('frameToggleText');
+
+            if (isFramed) {
+                wrapper.className = "w-full max-w-2xl h-[85vh] bg-slate-950 rounded-2xl p-2 border border-slate-800 shadow-2xl relative transition-all duration-300 flex flex-col";
+                icon.className = "fa-solid fa-[#000] fa-mobile-screen-button";
+                text.textContent = "Show Mockup Frame";
+                isFramed = false;
+            } else {
+                wrapper.className = "w-full max-w-[395px] h-[812px] bg-slate-950 rounded-[48px] p-3.5 border-[6px] border-slate-800 phone-shadow relative transition-all duration-300 flex flex-col";
+                icon.className = "fa-solid fa-[#000] fa-mobile-screen";
+                text.textContent = "Full View";
+                isFramed = true;
+            }
+        }
+
+        // Simulated QR Refresh Effect
+        function refreshQR() {
+            const box = document.getElementById('qrCodeBox');
+            box.style.opacity = '0.3';
+            setTimeout(() => {
+                box.style.opacity = '1';
+                triggerNotification("✨ Pass Scanned", "Your check-in token was validated!");
+            }, 300);
+        }
+
+        function openGoogleMapsSim() {
+            triggerNotification("🗺️ Opening Maps", "Redirecting to directions for Grand Palace Ballroom...");
+        }
+
+        // Live Countdown Timer Simulation
+        let seconds = 12;
+        let mins = 45;
+        let hours = 2;
+
+        setInterval(() => {
+            seconds--;
+            if (seconds < 0) {
+                seconds = 59;
+                mins--;
+                if (mins < 0) {
+                    mins = 59;
+                    hours--;
+                }
+            }
+            document.getElementById('cd-secs').textContent = seconds < 10 ? '0' + seconds : seconds;
+            document.getElementById('cd-mins').textContent = mins < 10 ? '0' + mins : mins;
+            document.getElementById('cd-hours').textContent = hours < 10 ? '0' + hours : hours;
+        }, 1000);
     </script>
 </body>
 </html>
