@@ -231,10 +231,12 @@
                     <input id="authPassword" type="password" placeholder="Enter password" class="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-sm text-white placeholder:text-slate-400 focus:border-christmasGold focus:outline-none" required>
                 </div>
 
-                <label id="staySignedInWrap" class="flex items-center gap-2 text-xs text-slate-300">
-                    <input id="staySignedIn" type="checkbox" class="h-4 w-4 rounded accent-christmasRed">
-                    <span>Stay signed in on this device</span>
-                </label>
+                <div id="staySignedInWrap">
+                    <button id="staySignedIn" type="button" aria-pressed="false" class="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-xs font-semibold text-slate-300 transition hover:border-christmasGold/60 hover:text-white">
+                        <i class="fa-regular fa-[#000] fa-square"></i>
+                        <span>Stay signed in on this device</span>
+                    </button>
+                </div>
 
                 <button type="submit" id="authSubmit" class="mt-2 w-full rounded-xl bg-gradient-to-r from-christmasRed to-christmasRed-light px-4 py-3 text-sm font-bold text-white shadow-lg shadow-christmasRed/20 transition active:scale-[0.99]">Continue</button>
             </form>
@@ -582,6 +584,7 @@
         const authTabSignup = document.getElementById('authTabSignup');
         const staySignedInWrap = document.getElementById('staySignedInWrap');
         const staySignedIn = document.getElementById('staySignedIn');
+        let staySignedInSelected = false;
         const enableNotificationsButton = document.getElementById('enableNotificationsButton');
         const notificationStatus = document.getElementById('notificationStatus');
 
@@ -599,12 +602,23 @@
             authNameWrap.classList.toggle('hidden', !isSignup);
             authName.required = isSignup;
             staySignedInWrap.classList.toggle('hidden', isSignup);
-            staySignedIn.checked = false;
+            staySignedInSelected = false;
+            updateStaySignedInButton();
             if (isSignup) {
                 authName.focus();
             } else {
                 authEmail.focus();
             }
+        }
+
+        function updateStaySignedInButton() {
+            staySignedIn.setAttribute('aria-pressed', String(staySignedInSelected));
+            staySignedIn.className = staySignedInSelected
+                ? 'flex w-full items-center justify-center gap-2 rounded-xl border border-christmasGold bg-christmasGold/10 px-3 py-2.5 text-xs font-semibold text-christmasGold transition'
+                : 'flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-xs font-semibold text-slate-300 transition hover:border-christmasGold/60 hover:text-white';
+            staySignedIn.querySelector('i').className = staySignedInSelected
+                ? 'fa-solid fa-[#000] fa-square-check'
+                : 'fa-regular fa-[#000] fa-square';
         }
 
         function requireAuth() {
@@ -621,6 +635,10 @@
 
         authTabSignin.addEventListener('click', () => setAuthMode('signin'));
         authTabSignup.addEventListener('click', () => setAuthMode('signup'));
+        staySignedIn.addEventListener('click', () => {
+            staySignedInSelected = !staySignedInSelected;
+            updateStaySignedInButton();
+        });
         enableNotificationsButton.addEventListener('click', async () => {
             if (!('Notification' in window)) {
                 notificationStatus.textContent = 'Notifications are not supported by this browser.';
@@ -669,7 +687,7 @@
             }
 
             const userName = authMode === 'signup' ? name : 'Guest';
-            if (authMode === 'signin' && staySignedIn.checked) {
+            if (authMode === 'signin' && staySignedInSelected) {
                 localStorage.setItem('christmasPartyStaySignedIn', 'true');
             } else {
                 localStorage.removeItem('christmasPartyStaySignedIn');
