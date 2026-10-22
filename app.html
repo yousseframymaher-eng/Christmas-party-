@@ -198,6 +198,18 @@
     </div>
 
     <div id="appShell" class="hidden w-full">
+    <section id="notificationPrompt" class="mx-auto mb-4 w-full max-w-4xl rounded-2xl border border-christmasGold/40 bg-slate-900/90 p-4 shadow-lg">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-sm font-bold text-white">Stay up to date</h2>
+                <p class="mt-1 text-xs text-slate-300">Tap the button to allow Christmas party notifications.</p>
+                <p id="notificationStatus" class="mt-1 text-xs text-christmasGold" aria-live="polite"></p>
+            </div>
+            <button id="enableNotificationsButton" type="button" class="shrink-0 rounded-xl bg-gradient-to-r from-christmasRed to-christmasRed-light px-4 py-2.5 text-xs font-bold text-white shadow-lg transition hover:brightness-110 active:scale-95">
+                <i class="fa-solid fa-[#000] fa-bell mr-1"></i> Enable Notifications
+            </button>
+        </div>
+    </section>
     <!-- Top Admin & Demo Control Bar -->
     <header class="w-full max-w-4xl mb-4 flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-lg z-30">
         <div class="flex items-center gap-3">
@@ -689,6 +701,8 @@
         const authPassword = document.getElementById('authPassword');
         const authTabSignin = document.getElementById('authTabSignin');
         const authTabSignup = document.getElementById('authTabSignup');
+        const enableNotificationsButton = document.getElementById('enableNotificationsButton');
+        const notificationStatus = document.getElementById('notificationStatus');
 
         let authMode = 'signin';
 
@@ -718,6 +732,28 @@
 
         authTabSignin.addEventListener('click', () => setAuthMode('signin'));
         authTabSignup.addEventListener('click', () => setAuthMode('signup'));
+        enableNotificationsButton.addEventListener('click', async () => {
+            if (!('Notification' in window)) {
+                notificationStatus.textContent = 'Notifications are not supported by this browser.';
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    notificationStatus.textContent = 'Notifications are enabled. You will get party updates here.';
+                    enableNotificationsButton.classList.add('hidden');
+                    new Notification('Christmas Party', { body: 'Notifications are enabled for party updates.' });
+                } else if (permission === 'denied') {
+                    notificationStatus.textContent = 'Notifications are blocked. Change your browser settings to allow them.';
+                } else {
+                    notificationStatus.textContent = 'Notifications were not enabled. You can try again anytime.';
+                }
+            } catch (error) {
+                notificationStatus.textContent = 'Could not enable notifications. Please check your browser settings.';
+                console.error('Notification permission request failed:', error);
+            }
+        });
 
         authForm.addEventListener('submit', (event) => {
             event.preventDefault();
