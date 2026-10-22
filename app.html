@@ -338,6 +338,18 @@
 
                     </div>
 
+                    <div id="tab-activities" class="hidden space-y-3.5">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-[#000] fa-champagne-glasses text-christmasGold text-xs"></i>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Activities</h3>
+                        </div>
+                        <div class="glass-card rounded-2xl border border-white/10 p-4 text-center">
+                            <i class="fa-solid fa-[#000] fa-star text-2xl text-christmasGold"></i>
+                            <p class="mt-2 text-sm font-semibold text-white">Party activities</p>
+                            <p class="mt-1 text-xs text-slate-400">Activity details will be added soon.</p>
+                        </div>
+                    </div>
+
                     <!-- TAB 3: VENUE & MAP -->
                     <div id="tab-venue" class="hidden space-y-3.5">
                         <div class="flex items-center justify-between">
@@ -485,6 +497,10 @@
                         <i class="fa-solid fa-[#000] fa-hourglass-half text-base"></i>
                         <span class="text-[10px] font-bold">Countdown</span>
                     </button>
+                    <button onclick="switchTab('activities')" id="nav-activities" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition-colors">
+                        <i class="fa-solid fa-[#000] fa-champagne-glasses text-base"></i>
+                        <span class="text-[10px] font-medium">Activities</span>
+                    </button>
                     <button onclick="switchTab('venue')" id="nav-venue" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition-colors">
                         <i class="fa-solid fa-[#000] fa-location-dot text-base"></i>
                         <span class="text-[10px] font-medium">Venue</span>
@@ -605,7 +621,7 @@
 
         // Tab Navigation Switcher Logic
         function switchTab(tabName) {
-            const tabs = ['countdown', 'venue', 'pass'];
+            const tabs = ['countdown', 'activities', 'venue', 'pass'];
             tabs.forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 const navBtn = document.getElementById(`nav-${t}`);
