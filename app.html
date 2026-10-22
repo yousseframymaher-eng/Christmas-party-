@@ -711,17 +711,6 @@
         }
 
         function requireAuth() {
-            const savedUser = localStorage.getItem('christmasPartyUser');
-            if (savedUser) {
-                appShell.classList.remove('hidden');
-                authOverlay.classList.add('hidden');
-                const user = JSON.parse(savedUser);
-                if (user && user.name) {
-                    triggerNotification('🎄 Welcome back!', `${user.name}, your event pass is ready.`);
-                }
-                return;
-            }
-
             appShell.classList.add('hidden');
             authOverlay.classList.remove('hidden');
             setAuthMode('signin');
@@ -754,16 +743,10 @@
                 return;
             }
 
-            const user = {
-                name: authMode === 'signup' ? name : (localStorage.getItem('christmasPartyUser') ? JSON.parse(localStorage.getItem('christmasPartyUser')).name : 'Guest'),
-                email,
-                password
-            };
-
-            localStorage.setItem('christmasPartyUser', JSON.stringify(user));
+            const userName = authMode === 'signup' ? name : 'Guest';
             authOverlay.classList.add('hidden');
             appShell.classList.remove('hidden');
-            triggerNotification('🎉 Access granted!', `Welcome ${user.name}! Your Christmas event pass is ready.`);
+            triggerNotification('🎉 Access granted!', `Welcome ${userName}! Your Christmas event pass is ready.`);
         });
 
         requireAuth();
