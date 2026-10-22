@@ -149,10 +149,55 @@
             0% { opacity: 0.3; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1.1); }
         }
+
+        .auth-card {
+            background: rgba(15, 23, 42, 0.92);
+            box-shadow: 0 25px 60px -20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(196, 30, 58, 0.22);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center p-2 sm:p-6 overflow-x-hidden">
 
+    <div id="authOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+        <div class="auth-card w-full max-w-md rounded-[32px] border border-christmasGold/30 p-6">
+            <div class="text-center">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-christmasRed to-christmasGold shadow-lg shadow-christmasRed/20">
+                    <i class="fa-solid fa-[#000] fa-tree text-2xl text-white"></i>
+                </div>
+                <p class="text-[10px] font-bold uppercase tracking-[0.28rem] text-christmasGold">Welcome</p>
+                <h2 id="authTitle" class="mt-2 text-2xl font-black text-white font-display">Sign in to the party</h2>
+                <p id="authSubtitle" class="mt-2 text-sm text-slate-300">Access your event pass and updates.</p>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-2 rounded-2xl bg-slate-800/80 p-1.5">
+                <button id="authTabSignin" type="button" class="rounded-xl bg-christmasRed px-3 py-2 text-xs font-bold text-white shadow-md">Sign In</button>
+                <button id="authTabSignup" type="button" class="rounded-xl px-3 py-2 text-xs font-bold text-slate-300 transition hover:text-white">Sign Up</button>
+            </div>
+
+            <form id="authForm" class="mt-5 space-y-3">
+                <div id="authNameWrap" class="hidden">
+                    <label for="authName" class="mb-1 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-300">Full Name</label>
+                    <input id="authName" type="text" placeholder="Your name" class="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-sm text-white placeholder:text-slate-400 focus:border-christmasGold focus:outline-none">
+                </div>
+
+                <div>
+                    <label for="authEmail" class="mb-1 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-300">Email</label>
+                    <input id="authEmail" type="email" placeholder="you@example.com" class="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-sm text-white placeholder:text-slate-400 focus:border-christmasGold focus:outline-none" required>
+                </div>
+
+                <div>
+                    <label for="authPassword" class="mb-1 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-300">Password</label>
+                    <input id="authPassword" type="password" placeholder="Enter password" class="w-full rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-2.5 text-sm text-white placeholder:text-slate-400 focus:border-christmasGold focus:outline-none" required>
+                </div>
+
+                <button type="submit" id="authSubmit" class="mt-2 w-full rounded-xl bg-gradient-to-r from-christmasRed to-christmasRed-light px-4 py-3 text-sm font-bold text-white shadow-lg shadow-christmasRed/20 transition active:scale-[0.99]">Continue</button>
+            </form>
+
+            <p class="mt-4 text-center text-[10px] text-slate-400">Secure access for every guest and party staff member.</p>
+        </div>
+    </div>
+
+    <div id="appShell" class="hidden w-full">
     <!-- Top Admin & Demo Control Bar -->
     <header class="w-full max-w-4xl mb-4 flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-lg z-30">
         <div class="flex items-center gap-3">
@@ -225,8 +270,8 @@
                                 <span class="text-[11px] font-bold text-christmasGold uppercase tracking-wider">Jingle Bell Gala</span>
                                 <span class="text-[9px] text-slate-400">Just now</span>
                             </div>
-                            <h4 id="toastTitle" class="text-xs font-bold text-white truncate">🎄 Secret Santa Starting Soon!</h4>
-                            <p id="toastBody" class="text-[11px] text-slate-300 leading-tight line-clamp-2 mt-0.5">Gather around the main Christmas tree in 10 minutes for gift exchanges!</p>
+                            <h4 id="toastTitle" class="text-xs font-bold text-white truncate">🎄 Christmas Party Starting Soon!</h4>
+                            <p id="toastBody" class="text-[11px] text-slate-300 leading-tight line-clamp-2 mt-0.5">Gather around the main Christmas tree in 10 minutes for the grand celebration!</p>
                         </div>
                     </div>
                 </div>
@@ -309,9 +354,9 @@
                                     </div>
                                     <span class="text-[9px] text-slate-400">10 mins ago</span>
                                 </div>
-                                <h4 class="text-xs font-semibold text-christmasGold mb-1">🎁 Secret Santa Gift Exchange Details</h4>
+                                <h4 class="text-xs font-semibold text-christmasGold mb-1">🎁 Festive Gift Table</h4>
                                 <p class="text-xs text-slate-300 leading-relaxed">
-                                    Please place your labeled Secret Santa gifts under the main tree in the Grand Ballroom before 8:30 PM!
+                                    Bring a small wrapped gift or leave one under the tree for the celebration table before 8:30 PM.
                                 </p>
                                 <div class="mt-2.5 flex items-center gap-3 pt-2 border-t border-white/5 text-[10px] text-slate-400">
                                     <button class="flex items-center gap-1 hover:text-christmasGold transition-colors" onclick="toggleLike(this)">
@@ -400,7 +445,7 @@
                                         <span class="text-[11px] font-extrabold text-christmasGold">9:30 PM</span>
                                         <span class="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">Main Stage</span>
                                     </div>
-                                    <h4 class="text-xs font-bold text-white">Secret Santa Exchange & Raffle</h4>
+                                    <h4 class="text-xs font-bold text-white">Holiday Raffle & Winter Cheer</h4>
                                     <p class="text-[11px] text-slate-400 mt-0.5">Gift unwrapping and announcement of the holiday raffle winner!</p>
                                     <div id="sched3" class="hidden mt-2 pt-2 border-t border-white/5 text-[11px] text-emerald-300">
                                         🎁 Ensure your pass code was scanned at entry for the raffle.
@@ -594,6 +639,7 @@
             </div>
         </div>
     </main>
+    </div>
 
     <!-- Modal: Add Announcement (Admin Demo) -->
     <div id="addModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
@@ -631,6 +677,97 @@
 
     <!-- Toast Banner Script & Interactive Features -->
     <script>
+        const authOverlay = document.getElementById('authOverlay');
+        const appShell = document.getElementById('appShell');
+        const authForm = document.getElementById('authForm');
+        const authTitle = document.getElementById('authTitle');
+        const authSubtitle = document.getElementById('authSubtitle');
+        const authSubmit = document.getElementById('authSubmit');
+        const authNameWrap = document.getElementById('authNameWrap');
+        const authName = document.getElementById('authName');
+        const authEmail = document.getElementById('authEmail');
+        const authPassword = document.getElementById('authPassword');
+        const authTabSignin = document.getElementById('authTabSignin');
+        const authTabSignup = document.getElementById('authTabSignup');
+
+        let authMode = 'signin';
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            const isSignup = mode === 'signup';
+
+            authTitle.textContent = isSignup ? 'Create your account' : 'Sign in to the party';
+            authSubtitle.textContent = isSignup ? 'Set up your guest profile.' : 'Access your event pass and updates.';
+            authSubmit.textContent = isSignup ? 'Create Account' : 'Continue';
+            authTabSignin.className = isSignup ? 'rounded-xl px-3 py-2 text-xs font-bold text-slate-300 transition hover:text-white' : 'rounded-xl bg-christmasRed px-3 py-2 text-xs font-bold text-white shadow-md';
+            authTabSignup.className = isSignup ? 'rounded-xl bg-christmasGold px-3 py-2 text-xs font-bold text-slate-950 shadow-md' : 'rounded-xl px-3 py-2 text-xs font-bold text-slate-300 transition hover:text-white';
+            authNameWrap.classList.toggle('hidden', !isSignup);
+            authName.required = isSignup;
+            if (isSignup) {
+                authName.focus();
+            } else {
+                authEmail.focus();
+            }
+        }
+
+        function requireAuth() {
+            const savedUser = localStorage.getItem('christmasPartyUser');
+            if (savedUser) {
+                appShell.classList.remove('hidden');
+                authOverlay.classList.add('hidden');
+                const user = JSON.parse(savedUser);
+                if (user && user.name) {
+                    triggerNotification('🎄 Welcome back!', `${user.name}, your event pass is ready.`);
+                }
+                return;
+            }
+
+            appShell.classList.add('hidden');
+            authOverlay.classList.remove('hidden');
+            setAuthMode('signin');
+        }
+
+        authTabSignin.addEventListener('click', () => setAuthMode('signin'));
+        authTabSignup.addEventListener('click', () => setAuthMode('signup'));
+
+        authForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const name = authName.value.trim();
+            const email = authEmail.value.trim();
+            const password = authPassword.value.trim();
+
+            if (authMode === 'signup' && !name) {
+                alert('Please enter your full name to create an account.');
+                authName.focus();
+                return;
+            }
+
+            if (!email || !password) {
+                alert('Please fill in your email and password.');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long.');
+                authPassword.focus();
+                return;
+            }
+
+            const user = {
+                name: authMode === 'signup' ? name : (localStorage.getItem('christmasPartyUser') ? JSON.parse(localStorage.getItem('christmasPartyUser')).name : 'Guest'),
+                email,
+                password
+            };
+
+            localStorage.setItem('christmasPartyUser', JSON.stringify(user));
+            authOverlay.classList.add('hidden');
+            appShell.classList.remove('hidden');
+            triggerNotification('🎉 Access granted!', `Welcome ${user.name}! Your Christmas event pass is ready.`);
+        });
+
+        requireAuth();
+
         // Tab Navigation Switcher Logic
         function switchTab(tabName) {
             const tabs = ['announcements', 'agenda', 'venue', 'pass'];
@@ -654,7 +791,7 @@
 
         // Demo Push Notification Trigger
         const sampleNotifications = [
-            { title: "🎁 Secret Santa Starting!", body: "Gather around the Christmas tree in 5 minutes!" },
+            { title: "🎁 Christmas Party Starting!", body: "Gather around the Christmas tree in 5 minutes!" },
             { title: "🍷 Special Cocktail Alert", body: "Fresh Spiced Mulled Wine served at Bar #1!" },
             { title: "📸 Photo Booth Contest", body: "Upload your best festive costume photo!" },
             { title: "🎄 Welcome to the Gala!", body: "Enjoy unlimited drinks and live jazz music!" }
@@ -843,25 +980,32 @@
             triggerNotification("🗺️ Opening Maps", "Redirecting to directions for Grand Palace Ballroom...");
         }
 
-        // Live Countdown Timer Simulation
-        let seconds = 12;
-        let mins = 45;
-        let hours = 2;
+        // Countdown to the party start: 18 Dec 2026 at 2:00 PM
+        const partyStart = new Date('2026-12-18T14:00:00');
 
-        setInterval(() => {
-            seconds--;
-            if (seconds < 0) {
-                seconds = 59;
-                mins--;
-                if (mins < 0) {
-                    mins = 59;
-                    hours--;
-                }
+        function updateCountdown() {
+            const now = new Date();
+            const diff = partyStart - now;
+
+            if (diff <= 0) {
+                document.getElementById('cd-hours').textContent = '00';
+                document.getElementById('cd-mins').textContent = '00';
+                document.getElementById('cd-secs').textContent = '00';
+                return;
             }
-            document.getElementById('cd-secs').textContent = seconds < 10 ? '0' + seconds : seconds;
-            document.getElementById('cd-mins').textContent = mins < 10 ? '0' + mins : mins;
-            document.getElementById('cd-hours').textContent = hours < 10 ? '0' + hours : hours;
-        }, 1000);
+
+            const totalSeconds = Math.floor(diff / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+            document.getElementById('cd-secs').textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
