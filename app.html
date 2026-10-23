@@ -195,9 +195,212 @@
             background: rgba(15, 23, 42, 0.92);
             box-shadow: 0 25px 60px -20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(196, 30, 58, 0.22);
         }
+
+        body {
+            display: block;
+            padding: 0;
+            background:
+                radial-gradient(ellipse at 12% 10%, rgba(196, 30, 58, 0.25), transparent 38%),
+                radial-gradient(ellipse at 88% 75%, rgba(0, 75, 35, 0.35), transparent 42%),
+                linear-gradient(145deg, #071b16 0%, #102b22 48%, #1b1420 100%);
+        }
+
+        body::after {
+            right: 2vw;
+            bottom: -0.1em;
+            font-size: clamp(12rem, 32vw, 28rem);
+            opacity: 0.07;
+        }
+
+        #authOverlay,
+        #appShell {
+            display: none !important;
+        }
+
+        .event-card {
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(14px);
+        }
+
+        .event-input {
+            width: 100%;
+            border: 1px solid #475569;
+            border-radius: 0.75rem;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 0.75rem 0.875rem;
+            color: #f8fafc;
+            outline: none;
+        }
+
+        .event-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.16);
+        }
+
+        .event-input::placeholder {
+            color: #94a3b8;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between items-center p-2 sm:p-6 overflow-x-hidden">
+<body class="min-h-screen overflow-x-hidden">
+
+    <main class="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-4 py-8 sm:px-8 sm:py-12">
+        <header class="mb-8 text-center sm:mb-12">
+            <p class="text-xs font-bold uppercase tracking-[0.28em] text-christmasGold">You’re invited</p>
+            <h1 class="mt-3 font-display text-3xl font-black text-white sm:text-5xl">Archangels Church Christmas Party</h1>
+            <p class="mt-3 text-sm text-slate-300 sm:text-base">Celebrate together this Christmas in Daher, Cairo.</p>
+        </header>
+
+        <section aria-labelledby="countdownTitle" class="event-card mx-auto mb-6 max-w-3xl rounded-3xl p-5 text-center shadow-2xl sm:mb-8 sm:p-8">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-christmasGold">The celebration begins</p>
+            <h2 id="countdownTitle" class="mt-2 text-xl font-bold text-white sm:text-2xl">Friday, December 18, 2026 · 2:00 PM</h2>
+            <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <span id="countDays" class="block text-3xl font-extrabold text-white sm:text-4xl">--</span>
+                    <span class="mt-1 block text-xs uppercase tracking-wider text-slate-400">Days</span>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <span id="countHours" class="block text-3xl font-extrabold text-white sm:text-4xl">--</span>
+                    <span class="mt-1 block text-xs uppercase tracking-wider text-slate-400">Hours</span>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <span id="countMinutes" class="block text-3xl font-extrabold text-white sm:text-4xl">--</span>
+                    <span class="mt-1 block text-xs uppercase tracking-wider text-slate-400">Minutes</span>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <span id="countSeconds" class="block text-3xl font-extrabold text-white sm:text-4xl">--</span>
+                    <span class="mt-1 block text-xs uppercase tracking-wider text-slate-400">Seconds</span>
+                </div>
+            </div>
+            <p id="countdownMessage" class="mt-4 hidden text-lg font-bold text-christmasGold" aria-live="polite">The party has started!</p>
+        </section>
+
+        <section aria-labelledby="locationTitle" class="event-card mx-auto mb-6 flex max-w-3xl flex-col gap-4 rounded-3xl p-5 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-christmasGold">Location</p>
+                <h2 id="locationTitle" class="mt-2 text-lg font-bold text-white">Archangel Greek Orthodox Church</h2>
+                <p class="mt-1 text-sm text-slate-300">Daher, Cairo, Egypt</p>
+            </div>
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Archangel+Greek+Orthodox+Church+Daher+Cairo+Egypt" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-christmasGold/50 px-4 py-2.5 text-sm font-bold text-christmasGold transition hover:bg-christmasGold/10">
+                <i class="fa-solid fa-[#000] fa-location-dot"></i> Open in Maps
+            </a>
+        </section>
+
+        <section aria-labelledby="bookingTitle" class="event-card mx-auto max-w-3xl rounded-3xl p-5 shadow-2xl sm:p-8">
+            <div class="mb-5">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-christmasGold">Reserve your place</p>
+                <h2 id="bookingTitle" class="mt-2 text-xl font-bold text-white sm:text-2xl">Ticket details</h2>
+                <p class="mt-2 text-sm text-slate-300">Enter your details to continue to the payment step.</p>
+                <p class="mt-2 text-xs text-amber-200">Demo only: this form is not connected to the organizers yet. Do not enter real personal details until registration is connected to a secure backend.</p>
+            </div>
+
+            <form id="ticketForm" class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label for="firstName" class="mb-1.5 block text-sm font-semibold text-slate-200">First name</label>
+                    <input id="firstName" name="firstName" class="event-input" autocomplete="given-name" required maxlength="80">
+                </div>
+                <div>
+                    <label for="lastName" class="mb-1.5 block text-sm font-semibold text-slate-200">Last name</label>
+                    <input id="lastName" name="lastName" class="event-input" autocomplete="family-name" required maxlength="80">
+                </div>
+                <div>
+                    <label for="ticketCount" class="mb-1.5 block text-sm font-semibold text-slate-200">Number of tickets</label>
+                    <input id="ticketCount" name="ticketCount" type="number" class="event-input" min="1" max="10" value="1" required>
+                </div>
+                <div>
+                    <label for="mobileNumber" class="mb-1.5 block text-sm font-semibold text-slate-200">Mobile number</label>
+                    <input id="mobileNumber" name="mobileNumber" type="tel" class="event-input" autocomplete="tel" inputmode="tel" placeholder="+20" required maxlength="20">
+                </div>
+                <button type="submit" class="sm:col-span-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-christmasRed to-christmasRed-light px-5 py-3 text-sm font-bold text-white shadow-lg transition hover:brightness-110 active:scale-[0.99]">
+                    Continue to payment <i class="fa-solid fa-[#000] fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <section id="paymentStep" class="mt-6 hidden border-t border-white/10 pt-6" aria-labelledby="paymentTitle" aria-live="polite">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-christmasGold">Next step</p>
+                <h3 id="paymentTitle" class="mt-2 text-lg font-bold text-white">Pay with InstaPay</h3>
+                <p class="mt-2 text-sm text-slate-300">Reservation reference: <strong id="reservationReference" class="text-white"></strong></p>
+                <p id="bookingSummary" class="mt-2 text-sm leading-relaxed text-slate-300"></p>
+                <p id="paymentAmount" class="mt-1 text-sm text-slate-300"></p>
+                <div id="paymentQrPlaceholder" class="mx-auto mt-5 flex min-h-48 max-w-xs flex-col items-center justify-center rounded-2xl border border-dashed border-christmasGold/50 bg-slate-950/50 p-5 text-center">
+                    <i class="fa-solid fa-[#000] fa-qrcode text-4xl text-christmasGold"></i>
+                    <p class="mt-3 text-sm font-semibold text-white">InstaPay QR will appear here</p>
+                    <p class="mt-1 text-xs text-slate-400">Payment details are not configured yet.</p>
+                </div>
+                <a id="instapayLink" class="mt-4 hidden min-h-12 items-center justify-center gap-2 rounded-xl bg-christmasGold px-5 py-3 text-sm font-bold text-slate-950" target="_blank" rel="noopener noreferrer">
+                    Open InstaPay <i class="fa-solid fa-[#000] fa-arrow-up-right-from-square"></i>
+                </a>
+                <p class="mt-4 rounded-xl bg-amber-400/10 p-3 text-xs leading-relaxed text-amber-100">
+                    Your booking is pending payment verification. A ticket/entry QR must only be issued after the payment is checked and confirmed.
+                </p>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const PARTY_START = new Date('2026-12-18T14:00:00+02:00');
+        const TICKET_PRICE_EGP = null;
+        const INSTAPAY_LINK = '';
+        const INSTAPAY_QR_IMAGE = '';
+
+        function updatePartyCountdown() {
+            const remaining = PARTY_START.getTime() - Date.now();
+            if (remaining <= 0) {
+                document.getElementById('countDays').textContent = '0';
+                document.getElementById('countHours').textContent = '00';
+                document.getElementById('countMinutes').textContent = '00';
+                document.getElementById('countSeconds').textContent = '00';
+                document.getElementById('countdownMessage').classList.remove('hidden');
+                return;
+            }
+
+            const totalSeconds = Math.floor(remaining / 1000);
+            document.getElementById('countDays').textContent = String(Math.floor(totalSeconds / 86400));
+            document.getElementById('countHours').textContent = String(Math.floor((totalSeconds % 86400) / 3600)).padStart(2, '0');
+            document.getElementById('countMinutes').textContent = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+            document.getElementById('countSeconds').textContent = String(totalSeconds % 60).padStart(2, '0');
+        }
+
+        updatePartyCountdown();
+        setInterval(updatePartyCountdown, 1000);
+
+        document.getElementById('ticketForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const form = event.currentTarget;
+            if (!form.reportValidity()) return;
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const ticketCount = Number(document.getElementById('ticketCount').value);
+            const mobileNumber = document.getElementById('mobileNumber').value.trim();
+            const reference = `ARCH-${Date.now().toString(36).toUpperCase()}`;
+            document.getElementById('reservationReference').textContent = reference;
+            document.getElementById('bookingSummary').textContent =
+                `${firstName} ${lastName} · ${ticketCount} ticket${ticketCount === 1 ? '' : 's'} · ${mobileNumber}`;
+            document.getElementById('paymentAmount').textContent = TICKET_PRICE_EGP === null
+                ? `Tickets requested: ${ticketCount}. Ticket price will be confirmed by the organizers.`
+                : `Amount due: ${(ticketCount * TICKET_PRICE_EGP).toFixed(2)} EGP for ${ticketCount} ticket${ticketCount === 1 ? '' : 's'}.`;
+
+            const paymentLink = document.getElementById('instapayLink');
+            const qrPlaceholder = document.getElementById('paymentQrPlaceholder');
+            if (INSTAPAY_LINK) {
+                paymentLink.href = INSTAPAY_LINK;
+                paymentLink.classList.remove('hidden');
+                paymentLink.classList.add('inline-flex');
+            }
+            if (INSTAPAY_QR_IMAGE) {
+                const qrImage = document.createElement('img');
+                qrImage.src = INSTAPAY_QR_IMAGE;
+                qrImage.alt = 'InstaPay payment QR code';
+                qrImage.className = 'mx-auto max-h-64 w-full max-w-64 rounded-lg bg-white p-2';
+                qrPlaceholder.replaceChildren(qrImage);
+            }
+
+            document.getElementById('paymentStep').classList.remove('hidden');
+            document.getElementById('paymentStep').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    </script>
 
     <div id="authOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
         <div class="auth-card w-full max-w-md rounded-[32px] border border-christmasGold/30 p-6">
