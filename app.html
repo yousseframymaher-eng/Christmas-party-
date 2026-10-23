@@ -245,19 +245,7 @@
         </div>
     </div>
 
-    <div id="appShell" class="hidden w-full">
-    <section id="notificationPrompt" class="mx-auto mb-4 w-full max-w-4xl rounded-2xl border border-christmasGold/40 bg-slate-900/90 p-4 shadow-lg">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-sm font-bold text-white">Stay up to date</h2>
-                <p class="mt-1 text-xs text-slate-300">Tap the button to allow Christmas party notifications.</p>
-                <p id="notificationStatus" class="mt-1 text-xs text-christmasGold" aria-live="polite"></p>
-            </div>
-            <button id="enableNotificationsButton" type="button" class="shrink-0 rounded-xl bg-gradient-to-r from-christmasRed to-christmasRed-light px-4 py-2.5 text-xs font-bold text-white shadow-lg transition hover:brightness-110 active:scale-95">
-                <i class="fa-solid fa-[#000] fa-bell mr-1"></i> Enable Notifications
-            </button>
-        </div>
-    </section>
+    <div id="appShell" class="hidden w-full flex-1 flex flex-col">
     <!-- Top Admin & Demo Control Bar -->
     <header class="w-full max-w-4xl mb-4 flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-lg z-30">
         <div class="flex items-center gap-3">
@@ -278,43 +266,21 @@
                 <i class="fa-solid fa-[#000] fa-bell animate-bounce"></i>
                 Simulate Push Notification
             </button>
-            <button onclick="togglePhoneFrame()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs sm:text-sm font-medium rounded-xl transition-all flex items-center gap-2 active:scale-95">
-                <i class="fa-solid fa-[#000] fa-mobile-screen" id="frameToggleIcon"></i>
-                <span id="frameToggleText" class="hidden sm:inline">Toggle Frame</span>
-            </button>
         </div>
     </header>
 
     <!-- Main Container for Phone Mockup / Full Screen Mode -->
     <main class="w-full flex-1 flex items-center justify-center relative py-2">
 
-        <!-- Mobile Frame Wrapper -->
-        <div id="phoneWrapper" class="w-full max-w-[395px] h-[812px] bg-slate-950 rounded-[48px] p-3.5 border-[6px] border-slate-800 phone-shadow relative transition-all duration-300 flex flex-col">
+        <div id="phoneWrapper" class="w-full max-w-4xl h-[calc(100vh-12rem)] min-h-[460px] sm:h-[calc(100vh-10rem)] sm:min-h-[560px] bg-transparent rounded-2xl p-0 border-0 shadow-none relative flex flex-col">
 
-            <!-- iPhone Dynamic Island / Notch -->
-            <div class="w-28 h-5 bg-black absolute top-5 left-1/2 -translate-x-1/2 rounded-full z-50 flex items-center justify-end px-2 gap-1.5">
-                <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800"></div>
-                <div class="w-2 h-2 rounded-full bg-blue-900/60"></div>
-            </div>
-
-            <!-- Phone Screen Content -->
-            <div class="phone-screen w-full h-full rounded-[38px] overflow-hidden relative flex flex-col border border-slate-800/80">
+            <div class="phone-screen w-full h-full overflow-hidden relative flex flex-col">
 
                 <div class="phone-santa" aria-hidden="true">🎅</div>
                 <!-- Decorative Christmas String Lights -->
                 <ul class="light-string">
                     <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
                 </ul>
-
-                <!-- Simulated Mobile Status Bar -->
-                <div class="pt-3 px-6 pb-1 flex justify-between items-center text-[11px] text-slate-300 font-semibold z-40 select-none">
-                    <span>9:41</span>
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-[#000] fa-signal text-[10px]"></i>
-                        <i class="fa-solid fa-[#000] fa-wifi text-[10px]"></i>
-                        <i class="fa-solid fa-[#000] fa-battery-full text-xs text-emerald-400"></i>
-                    </div>
-                </div>
 
                 <!-- Simulated Push Notification Toast Popup -->
                 <div id="pushToast" class="hidden absolute top-10 left-3 right-3 bg-slate-900/95 backdrop-blur-xl border border-christmasGold/50 rounded-2xl p-3 shadow-2xl z-50 cursor-pointer" onclick="closeNotification()">
@@ -585,8 +551,6 @@
         const staySignedInWrap = document.getElementById('staySignedInWrap');
         const staySignedIn = document.getElementById('staySignedIn');
         let staySignedInSelected = false;
-        const enableNotificationsButton = document.getElementById('enableNotificationsButton');
-        const notificationStatus = document.getElementById('notificationStatus');
 
         let authMode = 'signin';
 
@@ -639,29 +603,6 @@
             staySignedInSelected = !staySignedInSelected;
             updateStaySignedInButton();
         });
-        enableNotificationsButton.addEventListener('click', async () => {
-            if (!('Notification' in window)) {
-                notificationStatus.textContent = 'Notifications are not supported by this browser.';
-                return;
-            }
-
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    notificationStatus.textContent = 'Notifications are enabled. You will get party updates here.';
-                    enableNotificationsButton.classList.add('hidden');
-                    new Notification('Christmas Party', { body: 'Notifications are enabled for party updates.' });
-                } else if (permission === 'denied') {
-                    notificationStatus.textContent = 'Notifications are blocked. Change your browser settings to allow them.';
-                } else {
-                    notificationStatus.textContent = 'Notifications were not enabled. You can try again anytime.';
-                }
-            } catch (error) {
-                notificationStatus.textContent = 'Could not enable notifications. Please check your browser settings.';
-                console.error('Notification permission request failed:', error);
-            }
-        });
-
         authForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -686,7 +627,6 @@
                 return;
             }
 
-            const userName = authMode === 'signup' ? name : 'Guest';
             if (authMode === 'signin' && staySignedInSelected) {
                 localStorage.setItem('christmasPartyStaySignedIn', 'true');
             } else {
@@ -694,7 +634,6 @@
             }
             authOverlay.classList.add('hidden');
             appShell.classList.remove('hidden');
-            triggerNotification('🎉 Access granted!', `Welcome ${userName}! Your Christmas event pass is ready.`);
         });
 
         requireAuth();
@@ -790,26 +729,6 @@
                 btnMaybe.className = "py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white border border-amber-400 shadow-sm transition-all";
             } else {
                 btnNo.className = "py-1.5 rounded-xl text-xs font-bold bg-christmasRed text-white border border-christmasRed-light shadow-sm transition-all";
-            }
-        }
-
-        // Simulate Frame Toggle
-        let isFramed = true;
-        function togglePhoneFrame() {
-            const wrapper = document.getElementById('phoneWrapper');
-            const icon = document.getElementById('frameToggleIcon');
-            const text = document.getElementById('frameToggleText');
-
-            if (isFramed) {
-                wrapper.className = "w-full max-w-2xl h-[85vh] bg-slate-950 rounded-2xl p-2 border border-slate-800 shadow-2xl relative transition-all duration-300 flex flex-col";
-                icon.className = "fa-solid fa-[#000] fa-mobile-screen-button";
-                text.textContent = "Show Mockup Frame";
-                isFramed = false;
-            } else {
-                wrapper.className = "w-full max-w-[395px] h-[812px] bg-slate-950 rounded-[48px] p-3.5 border-[6px] border-slate-800 phone-shadow relative transition-all duration-300 flex flex-col";
-                icon.className = "fa-solid fa-[#000] fa-mobile-screen";
-                text.textContent = "Full View";
-                isFramed = true;
             }
         }
 
