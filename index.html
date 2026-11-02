@@ -241,6 +241,9 @@
         .admin-count { margin-top: 14px; padding: 18px; }
         .admin-count strong { display: block; margin-top: 4px; color: var(--gold); font-size: 27px; font-variant-numeric: tabular-nums; }
         .admin-count p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+        #admin-counter-box { margin-top: 16px; border: 1px solid rgba(76, 175, 80, .3); border-radius: 12px; background: rgba(34, 34, 34, .78); padding: 12px 18px; color: #fff; font-family: sans-serif; font-size: 13px; }
+        #admin-counter-box[hidden] { display: none; }
+        #online-count { color: #4caf50; font-size: 1.2em; font-weight: 700; }
         .chat-messages { display: grid; max-height: min(52vh, 560px); gap: 10px; overflow-y: auto; padding: 2px 3px 12px 0; }
         .chat-message { min-width: 0; padding: 13px 15px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255, 255, 255, .045); }
         .chat-message[data-own-message="true"] { border-color: rgba(242, 207, 102, .3); background: rgba(242, 207, 102, .055); }
@@ -368,6 +371,10 @@
                 <strong id="authUserCount">—</strong>
                 <p id="authUserCountLabel">People have logged in</p>
                 <p id="authUserCountStatus"></p>
+                <div id="admin-counter-box" aria-live="polite" hidden>
+                    🟢 Active Users Online Now: <span id="online-count">0</span>
+                    <p id="online-count-status"></p>
+                </div>
             </section>
         </section>
 
@@ -514,6 +521,8 @@
         let currentUser = null;
         let toastTimer;
         let partyRealtimeChannel = null;
+        let presenceChannel = null;
+        let presenceUserId = null;
         let partyDataInitialized = false;
 
         staySignedInInput.checked = localStorage.getItem(persistencePreferenceKey) === "true";
@@ -552,6 +561,7 @@
             document.getElementById("accountEmail").textContent = user.email ?? "";
             authScreen.hidden = true;
             partyApp.hidden = false;
+            connectActiveUsersPresence(user);
             await updateAdminAccess(user);
             if (wasSignedOut && !partyDataInitialized) {
                 partyDataInitialized = true;
@@ -569,6 +579,11 @@
             if (partyRealtimeChannel) {
                 void supabase.removeChannel(partyRealtimeChannel);
                 partyRealtimeChannel = null;
+            }
+            if (presenceChannel) {
+                void supabase.removeChannel(presenceChannel);
+                presenceChannel = null;
+                presenceUserId = null;
             }
             document.getElementById("adminUserCountCard").hidden = true;
             announcementList.replaceChildren();
@@ -771,6 +786,39 @@
             status.textContent = "Total Auth accounts that have signed in at least once.";
         }
 
+        function connectActiveUsersPresence(user) {
+            if (presenceChannel && presenceUserId === user.id) return;
+            if (presenceChannel) void supabase.removeChannel(presenceChannel);
+
+            const channel = supabase.channel("party-active-users", {
+                config: { presence: { key: user.id } }
+            });
+            presenceChannel = channel;
+            presenceUserId = user.id;
+
+            channel
+                .on("presence", { event: "sync" }, () => {
+                    document.getElementById("online-count").textContent =
+                        Object.keys(channel.presenceState()).length.toLocaleString();
+                })
+                .subscribe(async (status) => {
+                    if (status === "SUBSCRIBED") {
+                        document.getElementById("online-count-status").textContent = "Signed-in users currently connected to the app.";
+                        const { error } = await channel.track({
+                            user_id: user.id,
+                            online_at: new Date().toISOString()
+                        });
+                        if (error) {
+                            document.getElementById("online-count-status").textContent = "Couldn't register this active session.";
+                            console.error("Could not register active user presence:", error.message);
+                        }
+                    } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+                        document.getElementById("online-count-status").textContent = "Live active-user count is unavailable.";
+                        console.error("Active user presence connection failed:", status);
+                    }
+                });
+        }
+
         function connectPartyRealtime() {
             if (partyRealtimeChannel) return;
 
@@ -802,11 +850,13 @@
             adminSignedIn.hidden = true;
             if (!user) {
                 document.getElementById("adminUserCountCard").hidden = true;
+                document.getElementById("admin-counter-box").hidden = true;
                 adminStatus.textContent = "";
                 return;
             }
 
             document.getElementById("adminUserCountCard").hidden = true;
+            document.getElementById("admin-counter-box").hidden = true;
             const { data, error } = await supabase
                 .from("party_admins")
                 .select("user_id")
@@ -830,6 +880,7 @@
             adminSignedIn.hidden = false;
             announcementForm.hidden = false;
             adminStatus.textContent = `Signed in as ${user.email}.`;
+            document.getElementById("admin-counter-box").hidden = false;
             await loadAuthUserCount();
         }
 
