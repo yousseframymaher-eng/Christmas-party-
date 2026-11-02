@@ -236,6 +236,19 @@
         .auth-message[data-error="true"] { color: #ffadb0; }
         .account-actions { display: flex; align-items: center; gap: 10px; }
         .account-email { max-width: 150px; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+        .admin-count { margin-top: 14px; padding: 18px; }
+        .admin-count strong { display: block; margin-top: 4px; color: var(--gold); font-size: 27px; font-variant-numeric: tabular-nums; }
+        .admin-count p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+        .chat-messages { display: grid; max-height: min(52vh, 560px); gap: 10px; overflow-y: auto; padding: 2px 3px 12px 0; }
+        .chat-message { min-width: 0; padding: 13px 15px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255, 255, 255, .045); }
+        .chat-message[data-own-message="true"] { border-color: rgba(242, 207, 102, .3); background: rgba(242, 207, 102, .055); }
+        .chat-message-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 5px 12px; }
+        .chat-sender { color: var(--gold); font-size: 11px; font-weight: 800; }
+        .chat-time { color: var(--muted); font-size: 10px; }
+        .chat-text { margin: 8px 0 0; color: #e4e9e6; font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .chat-composer { display: grid; gap: 10px; margin-top: 15px; }
+        .chat-composer textarea { min-height: 76px; }
+        .chat-composer .button { justify-self: end; min-width: 120px; }
         #partyApp[hidden], #authScreen[hidden], #authNameField[hidden] { display: none; }
 
         @media (max-width: 420px) {
@@ -316,6 +329,9 @@
             <button class="tab" id="tab-announcements" type="button" role="tab" aria-selected="false" aria-controls="view-announcements" tabindex="-1">
                 <i class="fa-solid fa-bullhorn" aria-hidden="true"></i><span>Updates</span>
             </button>
+            <button class="tab" id="tab-chat" type="button" role="tab" aria-selected="false" aria-controls="view-chat" tabindex="-1">
+                <i class="fa-solid fa-comments" aria-hidden="true"></i><span>Chat</span>
+            </button>
             <button class="tab" id="tab-location" type="button" role="tab" aria-selected="false" aria-controls="view-location" tabindex="-1">
                 <i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Location</span>
             </button>
@@ -348,6 +364,12 @@
                     <p>Archangel Greek Orthodox Church<br>Daher, Cairo, Egypt</p>
                 </div>
             </div>
+            <section id="adminUserCountCard" class="card admin-count" aria-live="polite" hidden>
+                <p class="eyebrow">Admin overview</p>
+                <strong id="authUserCount">—</strong>
+                <p id="authUserCountLabel">People have logged in</p>
+                <p id="authUserCountStatus"></p>
+            </section>
         </section>
 
         <section class="view card section-card" id="view-announcements" role="tabpanel" aria-labelledby="tab-announcements" hidden>
@@ -389,6 +411,22 @@
                 <p id="adminStatus" class="admin-status" role="status" aria-live="polite"></p>
             </div>
             <p class="footer-note">Browser notifications work while this page is open. Allow notifications using the bell above.</p>
+        </section>
+
+        <section class="view card section-card" id="view-chat" role="tabpanel" aria-labelledby="tab-chat" hidden>
+            <p class="eyebrow">Say hello</p>
+            <h2 class="view-heading">Party chat</h2>
+            <p class="section-intro">Messages are shared with signed-in guests and update live.</p>
+            <div id="chatStatus" class="connection-state" role="status">Loading messages…</div>
+            <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
+            <form id="chatForm" class="chat-composer">
+                <label class="field" for="chatInput">Your message
+                    <textarea id="chatInput" name="text" maxlength="2000" placeholder="Write a message…" required></textarea>
+                </label>
+                <button id="sendMessage" class="button" type="submit">
+                    <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send
+                </button>
+            </form>
         </section>
 
         <section class="view card section-card" id="view-location" role="tabpanel" aria-labelledby="tab-location" hidden>
@@ -464,6 +502,11 @@
         let authMode = "signin";
         const announcementList = document.getElementById("announcementList");
         const connectionStatus = document.getElementById("connectionStatus");
+        const chatMessages = document.getElementById("chatMessages");
+        const chatStatus = document.getElementById("chatStatus");
+        const chatForm = document.getElementById("chatForm");
+        const chatInput = document.getElementById("chatInput");
+        const sendMessageButton = document.getElementById("sendMessage");
         const adminSignedOut = document.getElementById("adminSignedOut");
         const adminSignedIn = document.getElementById("adminSignedIn");
         const adminStatus = document.getElementById("adminStatus");
@@ -471,6 +514,8 @@
         const tabs = [...document.querySelectorAll('[role="tab"]')];
         let currentUser = null;
         let toastTimer;
+        let partyRealtimeChannel = null;
+        let partyDataInitialized = false;
 
         staySignedInInput.checked = localStorage.getItem(persistencePreferenceKey) === "true";
 
@@ -503,17 +548,33 @@
         }
 
         async function openPartyApp(user) {
+            const wasSignedOut = !currentUser || partyApp.hidden;
             currentUser = user;
             document.getElementById("accountEmail").textContent = user.email ?? "";
             authScreen.hidden = true;
             partyApp.hidden = false;
             await updateAdminAccess(user);
+            if (wasSignedOut && !partyDataInitialized) {
+                partyDataInitialized = true;
+                connectPartyRealtime();
+                void loadAnnouncements();
+                void loadMessages();
+            }
         }
 
         function showSignInScreen() {
             currentUser = null;
             partyApp.hidden = true;
             authScreen.hidden = false;
+            partyDataInitialized = false;
+            if (partyRealtimeChannel) {
+                void supabase.removeChannel(partyRealtimeChannel);
+                partyRealtimeChannel = null;
+            }
+            document.getElementById("adminUserCountCard").hidden = true;
+            announcementList.replaceChildren();
+            chatMessages.replaceChildren();
+            chatStatus.textContent = "Sign in to view party chat.";
             setAuthMessage("Sign in to continue to the party app.");
         }
 
@@ -616,15 +677,137 @@
             data.forEach((announcement) => addAnnouncement(announcement));
         }
 
+        function addMessage(message) {
+            if (!message?.id || chatMessages.querySelector(`[data-message-id="${CSS.escape(String(message.id))}"]`)) return;
+
+            const card = document.createElement("article");
+            card.className = "chat-message";
+            card.dataset.messageId = String(message.id);
+            card.dataset.createdAt = message.created_at;
+            card.dataset.ownMessage = String(message.user_id === currentUser?.id);
+
+            const header = document.createElement("div");
+            header.className = "chat-message-header";
+            const sender = document.createElement("span");
+            sender.className = "chat-sender";
+            sender.textContent = message.user_id === currentUser?.id
+                ? "You"
+                : `Guest ${String(message.user_id).slice(0, 8)}`;
+            const time = document.createElement("time");
+            time.className = "chat-time";
+            time.dateTime = message.created_at;
+            time.textContent = new Intl.DateTimeFormat(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }).format(new Date(message.created_at));
+            header.append(sender, time);
+
+            const text = document.createElement("p");
+            text.className = "chat-text";
+            text.textContent = message.text;
+            card.append(header, text);
+
+            const timestamp = Date.parse(message.created_at);
+            const nextMessage = [...chatMessages.querySelectorAll(".chat-message")].find((existing) => {
+                const existingTimestamp = Date.parse(existing.dataset.createdAt);
+                return existingTimestamp > timestamp
+                    || (existingTimestamp === timestamp
+                        && existing.dataset.messageId.localeCompare(String(message.id), undefined, { numeric: true }) > 0);
+            });
+            chatMessages.insertBefore(card, nextMessage ?? null);
+            chatStatus.hidden = true;
+            chatMessages.querySelector(".empty-state")?.remove();
+        }
+
+        async function loadMessages() {
+            const { data, error } = await supabase
+                .from("messages")
+                .select("id, created_at, text, user_id")
+                .order("created_at", { ascending: true });
+
+            if (error) {
+                chatStatus.hidden = false;
+                chatStatus.textContent = "Messages couldn't be loaded. Check the messages table permissions and try again.";
+                console.error("Could not load chat messages:", error.message);
+                return;
+            }
+
+            if (!data.length && !chatMessages.childElementCount) {
+                chatStatus.hidden = true;
+                const emptyState = document.createElement("div");
+                emptyState.className = "empty-state";
+                emptyState.textContent = "No messages yet. Start the conversation!";
+                chatMessages.append(emptyState);
+                return;
+            }
+            data.forEach(addMessage);
+        }
+
+        async function loadAuthUserCount() {
+            const card = document.getElementById("adminUserCountCard");
+            const count = document.getElementById("authUserCount");
+            const label = document.getElementById("authUserCountLabel");
+            const status = document.getElementById("authUserCountStatus");
+            card.hidden = false;
+            count.textContent = "—";
+            label.textContent = "People have logged in";
+            status.textContent = "Loading account count…";
+
+            const { data, error } = await supabase.rpc("get_party_user_count");
+            if (error) {
+                status.textContent = "Couldn't load the Auth user count. Check that the admin-count SQL setup has been run.";
+                console.error("Could not load Auth user count:", error.message);
+                return;
+            }
+
+            const userCount = Number(data);
+            if (!Number.isSafeInteger(userCount) || userCount < 0) {
+                status.textContent = "The Auth user count returned an invalid value.";
+                console.error("Invalid Auth user count returned:", data);
+                return;
+            }
+
+            count.textContent = userCount.toLocaleString();
+            label.textContent = `${userCount} ${userCount === 1 ? "person has" : "people have"} logged in`;
+            status.textContent = "Total Auth accounts that have signed in at least once.";
+        }
+
+        function connectPartyRealtime() {
+            if (partyRealtimeChannel) return;
+
+            partyRealtimeChannel = supabase
+                .channel("party-live-updates")
+                .on("postgres_changes", { event: "INSERT", schema: "public", table: "announcements" }, (payload) => {
+                    addAnnouncement(payload.new, payload.new.author_id !== currentUser?.id);
+                })
+                .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
+                    addMessage(payload.new);
+                })
+                .subscribe((status) => {
+                    if (status === "SUBSCRIBED") {
+                        void loadAnnouncements();
+                        void loadMessages();
+                    } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                        connectionStatus.hidden = false;
+                        connectionStatus.textContent = "Live announcement updates aren't available right now.";
+                        chatStatus.hidden = false;
+                        chatStatus.textContent = "Live chat isn't available right now. Check Realtime is enabled for the messages table.";
+                        console.error("Party realtime connection failed:", status);
+                    }
+                });
+        }
+
         async function updateAdminAccess(user) {
             currentUser = user;
             adminSignedOut.hidden = Boolean(user);
             adminSignedIn.hidden = true;
             if (!user) {
+                document.getElementById("adminUserCountCard").hidden = true;
                 adminStatus.textContent = "";
                 return;
             }
 
+            document.getElementById("adminUserCountCard").hidden = true;
             const { data, error } = await supabase
                 .from("party_admins")
                 .select("user_id")
@@ -648,7 +831,35 @@
             adminSignedIn.hidden = false;
             announcementForm.hidden = false;
             adminStatus.textContent = `Signed in as ${user.email}.`;
+            await loadAuthUserCount();
         }
+
+        chatForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text || !currentUser) return;
+
+            sendMessageButton.disabled = true;
+            chatStatus.hidden = false;
+            chatStatus.textContent = "Sending message…";
+            const { data, error } = await supabase
+                .from("messages")
+                .insert({ text })
+                .select("id, created_at, text, user_id")
+                .single();
+            sendMessageButton.disabled = false;
+
+            if (error) {
+                chatStatus.hidden = false;
+                chatStatus.textContent = "Your message couldn't be sent. Please try again.";
+                console.error("Could not send chat message:", error.message);
+                return;
+            }
+
+            addMessage(data);
+            chatInput.value = "";
+            chatStatus.hidden = true;
+        });
 
         tabs.forEach((tab, index) => {
             tab.addEventListener("click", () => selectTab(tab));
@@ -772,20 +983,6 @@
         document.getElementById("enableNotifications").title = "Enable browser notifications";
         updateCountdown();
         setInterval(updateCountdown, 1000);
-        loadAnnouncements();
-
-        supabase
-            .channel("party-announcements")
-            .on("postgres_changes", { event: "INSERT", schema: "public", table: "announcements" }, (payload) => {
-                addAnnouncement(payload.new, payload.new.author_id !== currentUser?.id);
-            })
-            .subscribe((status) => {
-                if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-                    connectionStatus.hidden = false;
-                    connectionStatus.textContent = "Live updates aren't available right now. Please refresh to try again.";
-                    console.error("Announcement realtime connection failed:", status);
-                }
-            });
 
         setAuthMode("signin");
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
