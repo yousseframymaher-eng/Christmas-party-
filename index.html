@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10251e">
+    <meta name="description" content="Your guide to the Archangels Church Christmas Party in Daher, Cairo.">
+    <title>Christmas Party 2026 | Archangels Church</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            color-scheme: dark;
+            --gold: #f2cf66;
+            --red: #d94350;
+            --green: #164b37;
+            --muted: #a7b3ae;
+            --panel: rgba(15, 35, 29, .88);
+            --line: rgba(255, 255, 255, .11);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 28px 18px 110px;
+            background:
+                radial-gradient(ellipse at 12% 9%, rgba(196, 30, 58, .25), transparent 38%),
+                radial-gradient(ellipse at 88% 76%, rgba(0, 100, 54, .28), transparent 42%),
+                linear-gradient(145deg, #071b16, #102b22 48%, #1b1420);
+            color: #f8fafc;
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+
+        button, input, textarea { font: inherit; }
+        button, a { -webkit-tap-highlight-color: transparent; }
+        button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 3px;
+        }
+
+        .app { width: min(100%, 720px); margin: 0 auto; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; }
+        .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .brand-icon {
+            display: grid;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 auto;
+            place-items: center;
+            border: 1px solid rgba(242, 207, 102, .36);
+            border-radius: 16px;
+            background: linear-gradient(145deg, #bb263a, #a77c22);
+            color: white;
+            font-size: 19px;
+        }
+        .eyebrow { margin: 0 0 4px; color: var(--gold); font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+        .brand h1 { margin: 0; font-size: 14px; font-weight: 800; line-height: 1.4; }
+        .brand p:last-child { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+        .bell-button {
+            display: grid;
+            width: 44px;
+            height: 44px;
+            flex: 0 0 auto;
+            place-items: center;
+            border: 1px solid var(--line);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, .06);
+            color: var(--gold);
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin-bottom: 18px;
+            padding: 5px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(3, 14, 11, .65);
+        }
+        .tab {
+            display: flex;
+            min-height: 58px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: 0;
+            border-radius: 13px;
+            background: transparent;
+            color: #aab5b0;
+            cursor: pointer;
+        }
+        .tab i { font-size: 16px; }
+        .tab span { font-size: 10px; font-weight: 700; }
+        .tab[aria-selected="true"] { background: linear-gradient(135deg, rgba(196, 30, 58, .84), rgba(122, 29, 42, .94)); color: white; }
+
+        .view[hidden] { display: none; }
+        .card {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--panel);
+            box-shadow: 0 20px 55px rgba(0, 0, 0, .22);
+            backdrop-filter: blur(14px);
+        }
+        .view-heading { margin: 0 0 15px; font-family: Cinzel, Georgia, serif; font-size: 23px; }
+        .muted { color: var(--muted); }
+        .home-hero {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(22px, 6vw, 36px);
+            text-align: center;
+            background:
+                radial-gradient(ellipse at 100% 0, rgba(198, 33, 54, .24), transparent 48%),
+                radial-gradient(ellipse at 0 100%, rgba(33, 113, 73, .25), transparent 45%),
+                var(--panel);
+        }
+        .home-hero::after { position: absolute; right: 6px; bottom: -34px; content: "🎄"; font-size: 120px; opacity: .09; pointer-events: none; }
+        .home-hero > * { position: relative; z-index: 1; }
+        .date-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid rgba(242, 207, 102, .27);
+            border-radius: 999px;
+            background: rgba(242, 207, 102, .08);
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .home-hero h2 { margin: 18px auto 8px; font-family: Cinzel, Georgia, serif; font-size: clamp(24px, 6vw, 36px); line-height: 1.2; }
+        .home-hero .intro { max-width: 420px; margin: 0 auto; color: #cad3cf; font-size: 13px; line-height: 1.7; }
+        .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-top: 25px; }
+        .time-unit { padding: 12px 4px; border: 1px solid rgba(255, 255, 255, .1); border-radius: 15px; background: rgba(0, 0, 0, .24); }
+        .time-unit strong { display: block; color: white; font-size: clamp(22px, 7vw, 33px); font-weight: 800; font-variant-numeric: tabular-nums; }
+        .time-unit span { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+        .event-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+        .detail { padding: 15px; }
+        .detail i { margin-right: 7px; color: var(--gold); }
+        .detail strong { font-size: 12px; }
+        .detail p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+        .section-card { padding: clamp(18px, 5vw, 26px); }
+        .section-intro { margin: -7px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+        .announcement-list { display: grid; gap: 11px; }
+        .announcement {
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 17px;
+            background: rgba(255, 255, 255, .045);
+        }
+        .announcement h3 { margin: 0; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+        .announcement p { margin: 8px 0 0; color: #cad3cf; font-size: 12px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .announcement time { display: block; margin-top: 10px; color: var(--muted); font-size: 10px; }
+        .empty-state, .connection-state { padding: 17px; border: 1px dashed rgba(255, 255, 255, .18); border-radius: 15px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+        .connection-state { margin: 12px 0; }
+        .admin-panel { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+        .admin-panel h3 { margin: 0 0 8px; font-size: 14px; }
+        .admin-panel p { color: var(--muted); font-size: 11px; line-height: 1.6; }
+        .form-grid { display: grid; gap: 11px; margin-top: 13px; }
+        .field { display: grid; gap: 6px; color: #d7dfdb; font-size: 11px; font-weight: 700; }
+        .field input, .field textarea {
+            width: 100%;
+            border: 1px solid #48584f;
+            border-radius: 12px;
+            background: rgba(4, 15, 12, .72);
+            padding: 12px;
+            color: white;
+            font-size: 13px;
+        }
+        .field textarea { min-height: 95px; resize: vertical; }
+        .button {
+            display: inline-flex;
+            min-height: 43px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid rgba(242, 207, 102, .36);
+            border-radius: 12px;
+            background: linear-gradient(135deg, #bd273b, #951f35);
+            padding: 10px 15px;
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button.secondary { border-color: var(--line); background: rgba(255, 255, 255, .06); color: #e8efeb; }
+        .button:disabled { opacity: .6; cursor: wait; }
+        .admin-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+        .admin-status { margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+        .map-frame { display: block; width: 100%; aspect-ratio: 1.35; border: 0; border-radius: 17px; background: #11251e; }
+        .location-name { margin: 18px 0 5px; font-size: 17px; }
+        .location-address { margin: 0; color: var(--muted); font-size: 12px; }
+        .map-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
+        .payment-card { text-align: center; }
+        .qr-image { display: block; width: min(100%, 310px); height: auto; margin: 17px auto; border: 8px solid white; border-radius: 16px; background: white; }
+        .account-id { display: inline-block; margin: 3px 0 12px; border: 1px solid rgba(242, 207, 102, .23); border-radius: 10px; background: rgba(242, 207, 102, .07); padding: 9px 12px; color: var(--gold); font-size: 12px; font-weight: 700; }
+        .payment-note { max-width: 420px; margin: 0 auto; color: var(--muted); font-size: 11px; line-height: 1.7; }
+        .toast {
+            position: fixed;
+            z-index: 10;
+            top: 16px;
+            left: 50%;
+            width: min(calc(100% - 28px), 480px);
+            transform: translateX(-50%);
+            border: 1px solid rgba(242, 207, 102, .38);
+            border-radius: 17px;
+            background: rgba(11, 25, 20, .97);
+            padding: 14px 16px;
+            box-shadow: 0 16px 42px rgba(0, 0, 0, .4);
+        }
+        .toast[hidden] { display: none; }
+        .toast strong { display: block; color: var(--gold); font-size: 12px; }
+        .toast span { display: block; margin-top: 4px; color: #e4e9e6; font-size: 11px; line-height: 1.5; }
+        .footer-note { margin: 18px 0 0; color: #87958e; font-size: 10px; line-height: 1.6; text-align: center; }
+
+        @media (max-width: 420px) {
+            body { padding: 18px 12px 32px; }
+            .brand h1 { font-size: 12px; }
+            .brand p:last-child { font-size: 10px; }
+            .event-details { grid-template-columns: 1fr; }
+            .tabs { position: sticky; z-index: 5; top: 8px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="notificationToast" class="toast" role="status" aria-live="polite" hidden>
+        <strong id="toastTitle"></strong>
+        <span id="toastMessage"></span>
+    </div>
+
+    <main class="app">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-icon" aria-hidden="true"><i class="fa-solid fa-tree"></i></div>
+                <div>
+                    <p class="eyebrow">You're invited</p>
+                    <h1>Archangels Church Christmas Party</h1>
+                    <p>Daher, Cairo · December 18, 2026</p>
+                </div>
+            </div>
+            <button id="enableNotifications" class="bell-button" type="button" aria-label="Enable browser notifications" title="Enable browser notifications">
+                <i class="fa-regular fa-bell" aria-hidden="true"></i>
+            </button>
+        </header>
+
+        <nav class="tabs" role="tablist" aria-label="Party app sections">
+            <button class="tab" id="tab-home" type="button" role="tab" aria-selected="true" aria-controls="view-home">
+                <i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span>
+            </button>
+            <button class="tab" id="tab-announcements" type="button" role="tab" aria-selected="false" aria-controls="view-announcements" tabindex="-1">
+                <i class="fa-solid fa-bullhorn" aria-hidden="true"></i><span>Updates</span>
+            </button>
+            <button class="tab" id="tab-location" type="button" role="tab" aria-selected="false" aria-controls="view-location" tabindex="-1">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Location</span>
+            </button>
+            <button class="tab" id="tab-payment" type="button" role="tab" aria-selected="false" aria-controls="view-payment" tabindex="-1">
+                <i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Payment</span>
+            </button>
+        </nav>
+
+        <section class="view" id="view-home" role="tabpanel" aria-labelledby="tab-home">
+            <div class="card home-hero">
+                <p class="eyebrow">Let the Christmas countdown begin</p>
+                <div class="date-pill"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Friday, December 18, 2026 · 2:00 PM</div>
+                <h2>Celebrate together</h2>
+                <p class="intro">We're looking forward to celebrating with you at the Archangels Church Christmas Party.</p>
+                <div class="countdown" aria-label="Countdown to the party">
+                    <div class="time-unit"><strong id="days">--</strong><span>Days</span></div>
+                    <div class="time-unit"><strong id="hours">--</strong><span>Hours</span></div>
+                    <div class="time-unit"><strong id="minutes">--</strong><span>Minutes</span></div>
+                    <div class="time-unit"><strong id="seconds">--</strong><span>Seconds</span></div>
+                </div>
+                <p id="countdownMessage" class="eyebrow" aria-live="polite" hidden></p>
+            </div>
+            <div class="event-details">
+                <div class="card detail">
+                    <strong><i class="fa-regular fa-clock" aria-hidden="true"></i>Party time</strong>
+                    <p>Friday, December 18, 2026<br>2:00 PM · Cairo time</p>
+                </div>
+                <div class="card detail">
+                    <strong><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Where to go</strong>
+                    <p>Archangel Greek Orthodox Church<br>Daher, Cairo, Egypt</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="view card section-card" id="view-announcements" role="tabpanel" aria-labelledby="tab-announcements" hidden>
+            <p class="eyebrow">Stay in the loop</p>
+            <h2 class="view-heading">Announcements</h2>
+            <p class="section-intro">The latest updates from the party organizers will appear here. Keep this page open for live announcements.</p>
+            <div id="connectionStatus" class="connection-state" role="status">Connecting to announcements…</div>
+            <div id="announcementList" class="announcement-list" aria-live="polite"></div>
+
+            <div class="admin-panel">
+                <div id="adminSignedOut">
+                    <h3>Organizer sign in</h3>
+                    <p>Authorized organizers can sign in to post announcements for guests.</p>
+                    <form id="adminLoginForm" class="form-grid">
+                        <label class="field">Organizer email
+                            <input id="adminEmail" type="email" autocomplete="username" required maxlength="254">
+                        </label>
+                        <label class="field">Password
+                            <input id="adminPassword" type="password" autocomplete="current-password" required>
+                        </label>
+                        <button class="button" type="submit"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Sign in as organizer</button>
+                    </form>
+                </div>
+                <div id="adminSignedIn" hidden>
+                    <div class="admin-actions">
+                        <h3>Post an announcement</h3>
+                        <button id="adminSignOut" class="button secondary" type="button">Sign out</button>
+                    </div>
+                    <form id="announcementForm" class="form-grid">
+                        <label class="field">Title
+                            <input id="announcementTitle" type="text" required maxlength="100" placeholder="Party update">
+                        </label>
+                        <label class="field">Message
+                            <textarea id="announcementMessage" required maxlength="2000" placeholder="Share an update with everyone…"></textarea>
+                        </label>
+                        <button id="publishAnnouncement" class="button" type="submit"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send announcement</button>
+                    </form>
+                </div>
+                <p id="adminStatus" class="admin-status" role="status" aria-live="polite"></p>
+            </div>
+            <p class="footer-note">Browser notifications work while this page is open. Allow notifications using the bell above.</p>
+        </section>
+
+        <section class="view card section-card" id="view-location" role="tabpanel" aria-labelledby="tab-location" hidden>
+            <p class="eyebrow">See you there</p>
+            <h2 class="view-heading">Party location</h2>
+            <p class="section-intro">Use the map or open directions in Google Maps to plan your trip.</p>
+            <iframe
+                class="map-frame"
+                title="Map showing Archangel Greek Orthodox Church in Daher, Cairo"
+                src="https://maps.google.com/maps?q=Archangel%20Greek%20Orthodox%20Church%2C%20Daher%2C%20Cairo%2C%20Egypt&amp;output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen>
+            </iframe>
+            <h3 class="location-name">Archangel Greek Orthodox Church</h3>
+            <p class="location-address">Daher, Cairo, Egypt</p>
+            <div class="map-actions">
+                <a class="button" href="https://www.google.com/maps/search/?api=1&amp;query=Archangel+Greek+Orthodox+Church+Daher+Cairo+Egypt" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-diamond-turn-right" aria-hidden="true"></i> Open in Google Maps
+                </a>
+            </div>
+        </section>
+
+        <section class="view card section-card payment-card" id="view-payment" role="tabpanel" aria-labelledby="tab-payment" hidden>
+            <p class="eyebrow">Secure your place</p>
+            <h2 class="view-heading">Pay with InstaPay</h2>
+            <p class="section-intro">Scan this QR code using InstaPay to make your payment.</p>
+            <img class="qr-image" src="instapay-qr.png" alt="InstaPay payment QR code for albertnlouca@instapay" width="795" height="1024">
+            <p class="account-id">albertnlouca@instapay</p>
+            <p class="payment-note">Please confirm the payment amount with the party organizers before sending. Keep your payment confirmation for reference.</p>
+        </section>
+    </main>
+
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+        import { supabaseUrl, supabasePublishableKey } from "./supabase-config.js";
+
+        const supabase = createClient(supabaseUrl, supabasePublishableKey);
+        const announcementList = document.getElementById("announcementList");
+        const connectionStatus = document.getElementById("connectionStatus");
+        const adminSignedOut = document.getElementById("adminSignedOut");
+        const adminSignedIn = document.getElementById("adminSignedIn");
+        const adminStatus = document.getElementById("adminStatus");
+        const announcementForm = document.getElementById("announcementForm");
+        const tabs = [...document.querySelectorAll('[role="tab"]')];
+        let currentUser = null;
+        let toastTimer;
+
+        function showToast(title, message) {
+            const toast = document.getElementById("notificationToast");
+            document.getElementById("toastTitle").textContent = title;
+            document.getElementById("toastMessage").textContent = message;
+            toast.hidden = false;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => { toast.hidden = true; }, 6000);
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: message, icon: "./instapay-qr.png" });
+            }
+        }
+
+        function addAnnouncement(announcement, notify = false) {
+            if (!announcement?.id || announcementList.querySelector(`[data-announcement-id="${CSS.escape(String(announcement.id))}"]`)) return;
+            const card = document.createElement("article");
+            card.className = "announcement";
+            card.dataset.announcementId = announcement.id;
+
+            const title = document.createElement("h3");
+            title.textContent = announcement.title;
+            const message = document.createElement("p");
+            message.textContent = announcement.message;
+            const time = document.createElement("time");
+            time.dateTime = announcement.created_at;
+            time.textContent = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(announcement.created_at));
+            card.append(title, message, time);
+            announcementList.prepend(card);
+
+            const emptyState = announcementList.querySelector(".empty-state");
+            if (emptyState) emptyState.remove();
+            if (notify) showToast(announcement.title, announcement.message);
+        }
+
+        async function loadAnnouncements() {
+            const { data, error } = await supabase
+                .from("announcements")
+                .select("id, title, message, created_at")
+                .order("created_at", { ascending: false })
+                .limit(50);
+
+            if (error) {
+                connectionStatus.textContent = "Announcements aren't connected yet. Check the Supabase setup in supabase-schema.sql.";
+                console.error("Could not load announcements:", error.message);
+                return;
+            }
+
+            connectionStatus.hidden = true;
+            if (!data.length) {
+                announcementList.innerHTML = '<div class="empty-state">No announcements yet. Check back here for updates from the organizers.</div>';
+                return;
+            }
+            data.forEach((announcement) => addAnnouncement(announcement));
+        }
+
+        async function updateAdminAccess(user) {
+            currentUser = user;
+            adminSignedOut.hidden = Boolean(user);
+            adminSignedIn.hidden = true;
+            if (!user) {
+                adminStatus.textContent = "";
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from("party_admins")
+                .select("user_id")
+                .eq("user_id", user.id)
+                .maybeSingle();
+
+            if (error) {
+                adminSignedIn.hidden = false;
+                announcementForm.hidden = true;
+                adminStatus.textContent = "Could not verify organizer access. Check the Supabase table policies.";
+                console.error("Could not verify organizer access:", error.message);
+                return;
+            }
+            if (!data) {
+                adminSignedIn.hidden = false;
+                announcementForm.hidden = true;
+                adminStatus.textContent = "This account isn't authorized to post announcements. Ask a project administrator to grant access.";
+                return;
+            }
+
+            adminSignedIn.hidden = false;
+            announcementForm.hidden = false;
+            adminStatus.textContent = `Signed in as ${user.email}.`;
+        }
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener("click", () => selectTab(tab));
+            tab.addEventListener("keydown", (event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                event.preventDefault();
+                const nextIndex = event.key === "Home" ? 0
+                    : event.key === "End" ? tabs.length - 1
+                    : (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+                tabs[nextIndex].focus();
+                selectTab(tabs[nextIndex]);
+            });
+        });
+
+        function selectTab(selectedTab) {
+            tabs.forEach((tab) => {
+                const active = tab === selectedTab;
+                tab.setAttribute("aria-selected", String(active));
+                tab.tabIndex = active ? 0 : -1;
+                document.getElementById(tab.getAttribute("aria-controls")).hidden = !active;
+            });
+        }
+
+        function updateCountdown() {
+            const difference = new Date("2026-12-18T14:00:00+02:00").getTime() - Date.now();
+            if (difference <= 0) {
+                ["days", "hours", "minutes", "seconds"].forEach((id) => {
+                    document.getElementById(id).textContent = "00";
+                });
+                document.getElementById("countdownMessage").textContent = "The party has started!";
+                document.getElementById("countdownMessage").hidden = false;
+                return;
+            }
+
+            const totalSeconds = Math.floor(difference / 1000);
+            const values = {
+                days: Math.floor(totalSeconds / 86400),
+                hours: Math.floor((totalSeconds % 86400) / 3600),
+                minutes: Math.floor((totalSeconds % 3600) / 60),
+                seconds: totalSeconds % 60
+            };
+            Object.entries(values).forEach(([id, value]) => {
+                document.getElementById(id).textContent = String(value).padStart(2, "0");
+            });
+        }
+
+        document.getElementById("enableNotifications").addEventListener("click", async () => {
+            if (!("Notification" in window)) {
+                showToast("Notifications unavailable", "This browser does not support desktop notifications. Live updates still appear in the app.");
+                return;
+            }
+            const permission = await Notification.requestPermission();
+            showToast(permission === "granted" ? "Notifications enabled" : "Notifications not enabled",
+                permission === "granted" ? "You'll get browser alerts when new announcements arrive while the app is open." : "You can still read live announcements in the Updates tab.");
+        });
+
+        document.getElementById("adminLoginForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            adminStatus.textContent = "Signing in…";
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: document.getElementById("adminEmail").value.trim(),
+                password: document.getElementById("adminPassword").value
+            });
+            if (error) {
+                adminStatus.textContent = "Sign-in failed. Check the email and password, then try again.";
+                console.error("Organizer sign-in failed:", error.message);
+                return;
+            }
+            await updateAdminAccess(data.user);
+        });
+
+        document.getElementById("adminSignOut").addEventListener("click", async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                adminStatus.textContent = "Could not sign out. Please try again.";
+                console.error("Organizer sign-out failed:", error.message);
+                return;
+            }
+            await updateAdminAccess(null);
+        });
+
+        announcementForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!currentUser) {
+                adminStatus.textContent = "Sign in as an authorized organizer before posting.";
+                return;
+            }
+            const button = document.getElementById("publishAnnouncement");
+            button.disabled = true;
+            adminStatus.textContent = "Sending announcement…";
+            const { data, error } = await supabase
+                .from("announcements")
+                .insert({
+                    title: document.getElementById("announcementTitle").value.trim(),
+                    message: document.getElementById("announcementMessage").value.trim(),
+                    author_id: currentUser.id
+                })
+                .select("id, title, message, created_at")
+                .single();
+            button.disabled = false;
+            if (error) {
+                adminStatus.textContent = "The announcement couldn't be sent. Check organizer access and try again.";
+                console.error("Could not publish announcement:", error.message);
+                return;
+            }
+            addAnnouncement(data);
+            announcementForm.reset();
+            adminStatus.textContent = "Announcement sent to everyone currently using the app.";
+        });
+
+        document.getElementById("enableNotifications").title = "Enable browser notifications";
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        loadAnnouncements();
+
+        supabase
+            .channel("party-announcements")
+            .on("postgres_changes", { event: "INSERT", schema: "public", table: "announcements" }, (payload) => {
+                addAnnouncement(payload.new, payload.new.author_id !== currentUser?.id);
+            })
+            .subscribe((status) => {
+                if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                    connectionStatus.hidden = false;
+                    connectionStatus.textContent = "Live updates aren't available right now. Please refresh to try again.";
+                    console.error("Announcement realtime connection failed:", status);
+                }
+            });
+
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+            adminStatus.textContent = "Could not restore the organizer session.";
+            console.error("Could not restore organizer session:", sessionError.message);
+        } else if (sessionData.session?.user) {
+            await updateAdminAccess(sessionData.session.user);
+        }
+
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === "SIGNED_OUT") {
+                void updateAdminAccess(null);
+            } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+                setTimeout(() => { void updateAdminAccess(session?.user ?? null); }, 0);
+            }
+        });
+    </script>
+</body>
+</html>
