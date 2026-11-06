@@ -252,6 +252,7 @@
         .chat-time { color: var(--muted); font-size: 10px; }
         .chat-text { margin: 8px 0 0; color: #e4e9e6; font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
         .chat-composer { display: grid; gap: 10px; margin-top: 15px; }
+        .chat-composer[hidden] { display: none; }
         .chat-composer textarea { min-height: 76px; }
         .chat-composer .button { justify-self: end; min-width: 120px; }
         #partyApp[hidden], #authScreen[hidden], #authNameField[hidden] { display: none; }
@@ -425,7 +426,8 @@
             <p class="section-intro">Messages are shared with signed-in guests and update live.</p>
             <div id="chatStatus" class="connection-state" role="status">Loading messages…</div>
             <div id="chatMessages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
-            <form id="chatForm" class="chat-composer">
+            <p id="chatReadOnlyNote" class="section-intro" hidden>Only organizers can post here.</p>
+            <form id="chatForm" class="chat-composer" hidden>
                 <label class="field" for="chatInput">Your message
                     <textarea id="chatInput" name="text" maxlength="2000" placeholder="Write a message…" required></textarea>
                 </label>
@@ -511,6 +513,7 @@
         const chatMessages = document.getElementById("chatMessages");
         const chatStatus = document.getElementById("chatStatus");
         const chatForm = document.getElementById("chatForm");
+        const chatReadOnlyNote = document.getElementById("chatReadOnlyNote");
         const chatInput = document.getElementById("chatInput");
         const sendMessageButton = document.getElementById("sendMessage");
         const adminSignedOut = document.getElementById("adminSignedOut");
@@ -848,6 +851,8 @@
             currentUser = user;
             adminSignedOut.hidden = Boolean(user);
             adminSignedIn.hidden = true;
+            chatForm.hidden = true;
+            chatReadOnlyNote.hidden = !user;
             if (!user) {
                 document.getElementById("adminUserCountCard").hidden = true;
                 document.getElementById("admin-counter-box").hidden = true;
@@ -879,6 +884,8 @@
 
             adminSignedIn.hidden = false;
             announcementForm.hidden = false;
+            chatForm.hidden = false;
+            chatReadOnlyNote.hidden = true;
             adminStatus.textContent = `Signed in as ${user.email}.`;
             document.getElementById("admin-counter-box").hidden = false;
             await loadAuthUserCount();
