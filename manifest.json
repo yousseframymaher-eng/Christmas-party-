@@ -1,0 +1,16 @@
+{
+  "name": "Christmas Party 2026",
+  "short_name": "Party",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#071b16",
+  "theme_color": "#10251e",
+  "icons": [
+    {
+      "src": "./apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

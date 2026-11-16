@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#10251e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="description" content="Your guide to the Archangels Church Christmas Party in Daher, Cairo.">
     <title>Christmas Party 2026 | Archangels Church</title>
+    <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
     <link rel="icon" href="./apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <style>
         :root {
             color-scheme: dark;
@@ -458,6 +462,7 @@
         import { supabaseUrl, supabasePublishableKey } from "./supabase-config.js";
 
         const persistencePreferenceKey = "christmasPartyStaySignedIn";
+        const ONESIGNAL_APP_ID = "REPLACE_WITH_YOUR_ONESIGNAL_APP_ID";
         const authStorageKey = `sb-${new URL(supabaseUrl).hostname.split(".")[0]}-auth-token`;
         const authStorage = {
             getItem(key) {
@@ -482,6 +487,42 @@
                 detectSessionInUrl: true
             }
         });
+
+        if (ONESIGNAL_APP_ID !== "REPLACE_WITH_YOUR_ONESIGNAL_APP_ID") {
+            window.OneSignal = window.OneSignal || [];
+            window.OneSignal.push(function () {
+                window.OneSignal.init({
+                    appId: ONESIGNAL_APP_ID,
+                    serviceWorkerParam: { scope: "./" },
+                    serviceWorkerPath: "./OneSignalSDKWorker.js",
+                    allowLocalhostAsSecureOrigin: true,
+                    notifyButton: { enable: false },
+                    autoRegister: false
+                });
+            });
+
+            window.OneSignal.on("subscriptionChange", async (isSubscribed) => {
+                if (!isSubscribed) return;
+                const userId = window.OneSignal.getUserId();
+                if (!userId) return;
+
+                const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+                if (sessionError || !sessionData.session?.user) return;
+
+                const { error } = await supabase
+                    .from("push_subscriptions")
+                    .upsert({
+                        user_id: sessionData.session.user.id,
+                        onesignal_user_id: userId,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: "user_id" });
+
+                if (error) {
+                    console.error("Could not save OneSignal subscription:", error.message);
+                }
+            });
+        }
+
         const authScreen = document.getElementById("authScreen");
         const partyApp = document.getElementById("partyApp");
         const authForm = document.getElementById("authForm");
@@ -950,12 +991,31 @@
 
         document.getElementById("enableNotifications").addEventListener("click", async () => {
             if (!("Notification" in window)) {
-                showToast("Notifications unavailable", "This browser does not support desktop notifications. Live updates still appear in the app.");
+                showToast("Notifications unavailable", "This browser does not support web notifications. Live updates still appear in the app.");
                 return;
             }
+
+            if (ONESIGNAL_APP_ID === "REPLACE_WITH_YOUR_ONESIGNAL_APP_ID") {
+                showToast("OneSignal is not configured yet", "Open the app script and replace the OneSignal app ID before enabling push alerts.");
+                return;
+            }
+
+            if (!window.OneSignal) {
+                showToast("Notifications are still loading", "Please wait a moment and try again.");
+                return;
+            }
+
             const permission = await Notification.requestPermission();
-            showToast(permission === "granted" ? "Notifications enabled" : "Notifications not enabled",
-                permission === "granted" ? "You'll get browser alerts when new announcements arrive while the app is open." : "You can still read live announcements in the Updates tab.");
+            if (permission !== "granted") {
+                showToast("Notifications not enabled", "You can still read live announcements inside the app.");
+                return;
+            }
+
+            window.OneSignal.push(function () {
+                window.OneSignal.showNativePrompt();
+            });
+
+            showToast("Push notifications enabled", "You will receive party alerts on this browser and when push is available on the device.");
         });
 
         document.getElementById("signOut").addEventListener("click", async () => {
