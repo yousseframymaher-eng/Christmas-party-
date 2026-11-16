@@ -52,16 +52,20 @@
         .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; }
         .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
         .brand-icon {
-            display: grid;
+            display: block;
             width: 46px;
             height: 46px;
             flex: 0 0 auto;
-            place-items: center;
+            overflow: hidden;
             border: 1px solid rgba(242, 207, 102, .36);
             border-radius: 16px;
-            background: linear-gradient(145deg, #bb263a, #a77c22);
-            color: white;
-            font-size: 19px;
+        }
+        .brand-icon img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 25%;
         }
         .eyebrow { margin: 0 0 4px; color: var(--gold); font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
         .brand h1 { margin: 0; font-size: 14px; font-weight: 800; line-height: 1.4; }
@@ -278,7 +282,7 @@
     <main id="authScreen" class="app auth-screen">
         <section class="card auth-card" aria-labelledby="authTitle">
             <header class="auth-brand">
-                <div class="brand-icon" aria-hidden="true"><i class="fa-solid fa-tree"></i></div>
+                <div class="brand-icon" aria-hidden="true"><img src="./christmas-mission-logo.jpeg" alt=""></div>
                 <p class="eyebrow">You're invited</p>
                 <h1 id="authTitle">Welcome to the party</h1>
                 <p>Sign in or create an account to see the party countdown, updates, and location.</p>
@@ -310,7 +314,7 @@
     <main id="partyApp" class="app" hidden>
         <header class="topbar">
             <div class="brand">
-                <div class="brand-icon" aria-hidden="true"><i class="fa-solid fa-tree"></i></div>
+                <div class="brand-icon" aria-hidden="true"><img src="./christmas-mission-logo.jpeg" alt=""></div>
                 <div>
                     <p class="eyebrow">You're invited</p>
                     <h1>Archangels Church Christmas Party</h1>
