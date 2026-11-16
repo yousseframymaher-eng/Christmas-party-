@@ -782,6 +782,7 @@
                         && existing.dataset.messageId.localeCompare(String(message.id), undefined, { numeric: true }) < 0);
             });
             chatMessages.insertBefore(card, nextMessage ?? null);
+            chatMessages.scrollTop = 0;
             chatStatus.hidden = true;
             chatMessages.querySelector(".empty-state")?.remove();
         }
