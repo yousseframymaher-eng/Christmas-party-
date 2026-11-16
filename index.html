@@ -507,8 +507,8 @@
         queueOneSignalTask(async (OneSignal) => {
             const initPromise = window[oneSignalInitPromiseKey] || (window[oneSignalInitPromiseKey] = OneSignal.init({
                 appId: ONESIGNAL_APP_ID,
-                serviceWorkerParam: { scope: "./" },
-                serviceWorkerPath: "./OneSignalSDKWorker.js"
+                serviceWorkerParam: { scope: "/Christmas-party-/" },
+                serviceWorkerPath: "/Christmas-party-/OneSignalSDKWorker.js"
             }));
             await initPromise;
 
