@@ -777,9 +777,9 @@
             const timestamp = Date.parse(message.created_at);
             const nextMessage = [...chatMessages.querySelectorAll(".chat-message")].find((existing) => {
                 const existingTimestamp = Date.parse(existing.dataset.createdAt);
-                return existingTimestamp > timestamp
+                return existingTimestamp < timestamp
                     || (existingTimestamp === timestamp
-                        && existing.dataset.messageId.localeCompare(String(message.id), undefined, { numeric: true }) > 0);
+                        && existing.dataset.messageId.localeCompare(String(message.id), undefined, { numeric: true }) < 0);
             });
             chatMessages.insertBefore(card, nextMessage ?? null);
             chatStatus.hidden = true;
