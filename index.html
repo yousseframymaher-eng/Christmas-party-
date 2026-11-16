@@ -463,6 +463,7 @@
 
         const persistencePreferenceKey = "christmasPartyStaySignedIn";
         const ONESIGNAL_APP_ID = "634efa08-20ba-4ecf-bcec-cedeefbc5dc7";
+        const oneSignalInitPromiseKey = "__christmasPartyOneSignalInitPromise";
         const authStorageKey = `sb-${new URL(supabaseUrl).hostname.split(".")[0]}-auth-token`;
         const authStorage = {
             getItem(key) {
@@ -488,44 +489,43 @@
             }
         });
 
-        try {
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            window.OneSignalDeferred.push(async (OneSignal) => {
-                try {
-                    await OneSignal.init({
-                        appId: ONESIGNAL_APP_ID,
-                        serviceWorkerParam: { scope: "./" },
-                        serviceWorkerPath: "./OneSignalSDKWorker.js"
-                    });
-
-                    OneSignal.Notifications.addEventListener("permissionChange", async (permission) => {
-                        try {
-                            if (permission) await saveOneSignalSubscription(OneSignal);
-                        } catch (error) {
-                            console.error("Could not save OneSignal subscription after permission changed:", error);
-                        }
-                    });
-
-                    OneSignal.User.PushSubscription.addEventListener("change", async () => {
-                        try {
-                            if (OneSignal.Notifications.permission) {
-                                await saveOneSignalSubscription(OneSignal);
-                            }
-                        } catch (error) {
-                            console.error("Could not save the changed OneSignal subscription:", error);
-                        }
-                    });
-
-                    if (OneSignal.Notifications.permission) {
-                        await saveOneSignalSubscription(OneSignal);
+        function queueOneSignalTask(task, errorContext) {
+            try {
+                window.OneSignalDeferred = window.OneSignalDeferred || [];
+                window.OneSignalDeferred.push(async (OneSignal) => {
+                    try {
+                        await task(OneSignal);
+                    } catch (error) {
+                        console.error(errorContext, error);
                     }
-                } catch (error) {
-                    console.error("OneSignal initialization failed:", error);
+                });
+            } catch (error) {
+                console.error(`Could not queue ${errorContext}:`, error);
+            }
+        }
+
+        queueOneSignalTask(async (OneSignal) => {
+            const initPromise = window[oneSignalInitPromiseKey] || (window[oneSignalInitPromiseKey] = OneSignal.init({
+                appId: ONESIGNAL_APP_ID,
+                serviceWorkerParam: { scope: "./" },
+                serviceWorkerPath: "./OneSignalSDKWorker.js"
+            }));
+            await initPromise;
+
+            OneSignal.Notifications.addEventListener("permissionChange", (permission) => {
+                if (permission) {
+                    queueOneSignalTask(saveOneSignalSubscription, "Could not save OneSignal subscription after permission changed:");
                 }
             });
-        } catch (error) {
-            console.error("Could not schedule OneSignal initialization:", error);
-        }
+
+            OneSignal.User.PushSubscription.addEventListener("change", () => {
+                queueOneSignalTask(async (OneSignal) => {
+                    if (OneSignal.Notifications.permission) await saveOneSignalSubscription(OneSignal);
+                }, "Could not save the changed OneSignal subscription:");
+            });
+
+            if (OneSignal.Notifications.permission) await saveOneSignalSubscription(OneSignal);
+        }, "OneSignal initialization failed:");
 
         const authScreen = document.getElementById("authScreen");
         const partyApp = document.getElementById("partyApp");
@@ -1014,38 +1014,27 @@
         }
 
         document.getElementById("enableNotifications").addEventListener("click", async () => {
-            try {
-                window.OneSignalDeferred = window.OneSignalDeferred || [];
-                window.OneSignalDeferred.push(async (OneSignal) => {
-                    try {
-                        if (!OneSignal.Notifications.isPushSupported()) {
-                            showToast("Notifications unavailable", "This browser does not support web push. Live updates still appear in the app.");
-                            return;
-                        }
+            queueOneSignalTask(async (OneSignal) => {
+                if (!OneSignal.Notifications.isPushSupported()) {
+                    showToast("Notifications unavailable", "This browser does not support web push. Live updates still appear in the app.");
+                    return;
+                }
 
-                        await OneSignal.Notifications.requestPermission();
-                        if (!OneSignal.Notifications.permission) {
-                            showToast("Notifications not enabled", "You can still read live announcements inside the app.");
-                            return;
-                        }
+                await OneSignal.Notifications.requestPermission();
+                if (!OneSignal.Notifications.permission) {
+                    showToast("Notifications not enabled", "You can still read live announcements inside the app.");
+                    return;
+                }
 
-                        await OneSignal.User.PushSubscription.optIn();
-                        const saved = await saveOneSignalSubscription(OneSignal);
-                        showToast(
-                            "Push notifications enabled",
-                            saved
-                                ? "You will receive party announcements on this device."
-                                : "Permission was granted. Your device subscription is still being set up."
-                        );
-                    } catch (error) {
-                        console.error("Could not enable OneSignal push notifications:", error);
-                        showToast("Couldn't enable notifications", "Please try again, or check this browser's notification settings.");
-                    }
-                });
-            } catch (error) {
-                console.error("Could not schedule the OneSignal permission request:", error);
-                showToast("Couldn't enable notifications", "Please refresh the page and try again.");
-            }
+                await OneSignal.User.PushSubscription.optIn();
+                const saved = await saveOneSignalSubscription(OneSignal);
+                showToast(
+                    "Push notifications enabled",
+                    saved
+                        ? "You will receive party announcements on this device."
+                        : "Permission was granted. Your device subscription is still being set up."
+                );
+            }, "Could not enable OneSignal push notifications:");
         });
 
         document.getElementById("signOut").addEventListener("click", async () => {
