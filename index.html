@@ -77,7 +77,7 @@
 
         .tabs {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 4px;
             margin-bottom: 18px;
             padding: 5px;
@@ -200,10 +200,6 @@
         .location-name { margin: 18px 0 5px; font-size: 17px; }
         .location-address { margin: 0; color: var(--muted); font-size: 12px; }
         .map-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
-        .payment-card { text-align: center; }
-        .qr-image { display: block; width: min(100%, 310px); height: auto; margin: 17px auto; border: 8px solid white; border-radius: 16px; background: white; }
-        .account-id { display: inline-block; margin: 3px 0 12px; border: 1px solid rgba(242, 207, 102, .23); border-radius: 10px; background: rgba(242, 207, 102, .07); padding: 9px 12px; color: var(--gold); font-size: 12px; font-weight: 700; }
-        .payment-note { max-width: 420px; margin: 0 auto; color: var(--muted); font-size: 11px; line-height: 1.7; }
         .toast {
             position: fixed;
             z-index: 10;
@@ -281,7 +277,7 @@
                 <div class="brand-icon" aria-hidden="true"><i class="fa-solid fa-tree"></i></div>
                 <p class="eyebrow">You're invited</p>
                 <h1 id="authTitle">Welcome to the party</h1>
-                <p>Sign in or create an account to see the party countdown, updates, location, and payment details.</p>
+                <p>Sign in or create an account to see the party countdown, updates, and location.</p>
             </header>
             <div class="auth-switch" role="group" aria-label="Account action">
                 <button id="showSignIn" type="button" aria-pressed="true">Sign in</button>
@@ -337,9 +333,6 @@
             </button>
             <button class="tab" id="tab-location" type="button" role="tab" aria-selected="false" aria-controls="view-location" tabindex="-1">
                 <i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Location</span>
-            </button>
-            <button class="tab" id="tab-payment" type="button" role="tab" aria-selected="false" aria-controls="view-payment" tabindex="-1">
-                <i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Payment</span>
             </button>
         </nav>
 
@@ -458,14 +451,6 @@
             </div>
         </section>
 
-        <section class="view card section-card payment-card" id="view-payment" role="tabpanel" aria-labelledby="tab-payment" hidden>
-            <p class="eyebrow">Secure your place</p>
-            <h2 class="view-heading">Pay with InstaPay</h2>
-            <p class="section-intro">Scan this QR code using InstaPay to make your payment.</p>
-            <img class="qr-image" src="instapay-qr.png" alt="InstaPay payment QR code for youssef.maher2501@instapay" width="516" height="555">
-            <p class="account-id">youssef.maher2501@instapay</p>
-            <p class="payment-note">Please confirm the payment amount with the party organizers before sending. Keep your payment confirmation for reference.</p>
-        </section>
     </main>
 
     <script type="module">
