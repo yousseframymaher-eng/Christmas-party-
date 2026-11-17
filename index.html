@@ -675,7 +675,10 @@
                 ? await supabase.auth.signUp({
                     email: authEmailInput.value.trim(),
                     password: authPasswordInput.value,
-                    options: { data: { full_name: authNameInput.value.trim() } }
+                    options: {
+                        emailRedirectTo: "https://yousseframymaher-eng.github.io/Christmas-party-/index.html",
+                        data: { full_name: authNameInput.value.trim() }
+                    }
                 })
                 : await supabase.auth.signInWithPassword({
                     email: authEmailInput.value.trim(),
