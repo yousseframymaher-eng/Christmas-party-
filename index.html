@@ -234,20 +234,6 @@
         .toast[hidden] { display: none; }
         .toast strong { display: block; color: var(--gold); font-size: 12px; }
         .toast span { display: block; margin-top: 4px; color: #e4e8ed; font-size: 11px; line-height: 1.5; }
-        .notification-prompt {
-            width: min(calc(100% - 32px), 420px);
-            border: 1px solid rgba(243, 207, 130, .45);
-            border-radius: 22px;
-            background: #07182b;
-            padding: clamp(22px, 6vw, 30px);
-            color: var(--text);
-            box-shadow: 0 24px 70px rgba(0, 0, 0, .55);
-        }
-        .notification-prompt::backdrop { background: rgba(2, 9, 17, .78); }
-        .notification-prompt h2 { margin: 0 0 10px; font-family: Cinzel, Georgia, serif; font-size: 22px; }
-        .notification-prompt p { margin: 0; color: #e4e8ed; font-size: 12px; line-height: 1.7; }
-        .notification-prompt-actions { display: grid; gap: 9px; margin-top: 22px; }
-        .notification-prompt-actions .button { width: 100%; }
         .footer-note { margin: 18px 0 0; color: #9eacbd; font-size: 10px; line-height: 1.6; text-align: center; }
         .auth-screen { display: grid; min-height: calc(100vh - 56px); place-items: center; }
         .auth-card { width: min(100%, 430px); padding: clamp(22px, 6vw, 34px); }
@@ -302,14 +288,6 @@
         <strong id="toastTitle"></strong>
         <span id="toastMessage"></span>
     </div>
-    <dialog id="notificationPrompt" class="notification-prompt" aria-labelledby="notificationPromptTitle" aria-describedby="notificationPromptDescription">
-        <h2 id="notificationPromptTitle">Hear new chat messages</h2>
-        <p id="notificationPromptDescription">Allow notifications and, after you sign in, new chat messages received while this page is open will be read aloud.</p>
-        <div class="notification-prompt-actions">
-            <button id="allowNotifications" class="button" type="button">Allow notifications</button>
-            <button id="dismissNotificationPrompt" class="button secondary" type="button">Not now</button>
-        </div>
-    </dialog>
 
     <main id="authScreen" class="app auth-screen">
         <section class="card auth-card" aria-labelledby="authTitle">
@@ -358,7 +336,7 @@
                 <button id="signOut" class="bell-button" type="button" aria-label="Sign out" title="Sign out">
                     <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
                 </button>
-                <button id="enableNotifications" class="bell-button" type="button" aria-label="Enable notifications and spoken chat" title="Enable notifications and spoken chat">
+                <button id="enableNotifications" class="bell-button" type="button" aria-label="Enable browser notifications" title="Enable browser notifications">
                     <i class="fa-regular fa-bell" aria-hidden="true"></i>
                 </button>
             </div>
@@ -498,8 +476,6 @@
         import { supabaseUrl, supabasePublishableKey } from "./supabase-config.js";
 
         const persistencePreferenceKey = "christmasPartyStaySignedIn";
-        const spokenChatPreferenceKey = "christmasPartySpokenChatEnabled";
-        const notificationPromptDismissedKey = "christmasPartyNotificationPromptDismissed";
         const ONESIGNAL_APP_ID = "634efa08-20ba-4ecf-bcec-cedeefbc5dc7";
         const oneSignalInitPromiseKey = "__christmasPartyOneSignalInitPromise";
         const authStorageKey = `sb-${new URL(supabaseUrl).hostname.split(".")[0]}-auth-token`;
@@ -595,7 +571,6 @@
         let presenceChannel = null;
         let presenceUserId = null;
         let partyDataInitialized = false;
-        let spokenChatEnabled = localStorage.getItem(spokenChatPreferenceKey) === "true";
 
         async function saveOneSignalSubscription(OneSignal) {
             const subscription = OneSignal.User.PushSubscription;
@@ -650,9 +625,6 @@
         async function openPartyApp(user) {
             const wasSignedOut = !currentUser || partyApp.hidden;
             currentUser = user;
-            if (wasSignedOut) {
-                queueOneSignalTask(saveOneSignalSubscription, "Could not save OneSignal subscription after sign-in:");
-            }
             document.getElementById("accountEmail").textContent = user.email ?? "";
             authScreen.hidden = true;
             partyApp.hidden = false;
@@ -789,7 +761,7 @@
             data.forEach((announcement) => addAnnouncement(announcement));
         }
 
-        function addMessage(message, announce = false) {
+        function addMessage(message) {
             if (!message?.id || chatMessages.querySelector(`[data-message-id="${CSS.escape(String(message.id))}"]`)) return;
 
             const card = document.createElement("article");
@@ -830,15 +802,6 @@
             chatMessages.scrollTop = 0;
             chatStatus.hidden = true;
             chatMessages.querySelector(".empty-state")?.remove();
-            if (announce && message.user_id !== currentUser?.id) speakChatMessage(message.text);
-        }
-
-        function speakChatMessage(text) {
-            if (!spokenChatEnabled || !("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") return;
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = /[\u0600-\u06ff]/i.test(text) ? "ar" : navigator.language;
-            window.speechSynthesis.speak(utterance);
         }
 
         async function loadMessages() {
@@ -862,7 +825,7 @@
                 chatMessages.append(emptyState);
                 return;
             }
-            data.forEach((message) => addMessage(message));
+            data.forEach(addMessage);
         }
 
         async function loadAuthUserCount() {
@@ -936,7 +899,7 @@
                     addAnnouncement(payload.new, payload.new.author_id !== currentUser?.id);
                 })
                 .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
-                    addMessage(payload.new, true);
+                    addMessage(payload.new);
                 })
                 .subscribe((status) => {
                     if (status === "SUBSCRIBED") {
@@ -1068,34 +1031,16 @@
             });
         }
 
-        async function enableNotificationsAndSpeech() {
-            if ("speechSynthesis" in window) {
-                spokenChatEnabled = true;
-                localStorage.setItem(spokenChatPreferenceKey, "true");
-                window.speechSynthesis.resume();
-            }
-
+        document.getElementById("enableNotifications").addEventListener("click", async () => {
             queueOneSignalTask(async (OneSignal) => {
                 if (!OneSignal.Notifications.isPushSupported()) {
-                    showToast(
-                        "Notifications unavailable",
-                        spokenChatEnabled
-                            ? "This browser does not support web push. New chat messages will still be read aloud while this page is open."
-                            : "This browser does not support web push. Live updates still appear in the app."
-                    );
+                    showToast("Notifications unavailable", "This browser does not support web push. Live updates still appear in the app.");
                     return;
                 }
 
-                if (!("Notification" in window) || Notification.permission !== "denied") {
-                    await OneSignal.Notifications.requestPermission();
-                }
+                await OneSignal.Notifications.requestPermission();
                 if (!OneSignal.Notifications.permission) {
-                    showToast(
-                        "Notifications not enabled",
-                        spokenChatEnabled
-                            ? "Browser notifications are blocked or were declined. New chat messages will still be read aloud while this page is open."
-                            : "You can still read live announcements inside the app."
-                    );
+                    showToast("Notifications not enabled", "You can still read live announcements inside the app.");
                     return;
                 }
 
@@ -1108,39 +1053,6 @@
                         : "Permission was granted. Your device subscription is still being set up."
                 );
             }, "Could not enable OneSignal push notifications:");
-        }
-
-        const notificationPrompt = document.getElementById("notificationPrompt");
-        const allowNotificationsButton = document.getElementById("allowNotifications");
-        const notificationPromptDescription = document.getElementById("notificationPromptDescription");
-
-        function showNotificationPrompt() {
-            if (spokenChatEnabled || sessionStorage.getItem(notificationPromptDismissedKey) === "true") return;
-
-            if (!("Notification" in window) || Notification.permission !== "default") {
-                allowNotificationsButton.textContent = "Enable spoken chat";
-                notificationPromptDescription.textContent = "Browser notifications are already enabled or unavailable here. After you sign in, new chat messages received while this page is open can be read aloud.";
-            }
-            notificationPrompt.showModal();
-        }
-
-        allowNotificationsButton.addEventListener("click", () => {
-            notificationPrompt.close();
-            void enableNotificationsAndSpeech();
-        });
-
-        function dismissNotificationPrompt() {
-            sessionStorage.setItem(notificationPromptDismissedKey, "true");
-            notificationPrompt.close();
-        }
-
-        document.getElementById("dismissNotificationPrompt").addEventListener("click", dismissNotificationPrompt);
-        notificationPrompt.addEventListener("cancel", () => {
-            sessionStorage.setItem(notificationPromptDismissedKey, "true");
-        });
-
-        document.getElementById("enableNotifications").addEventListener("click", () => {
-            void enableNotificationsAndSpeech();
         });
 
         document.getElementById("signOut").addEventListener("click", async () => {
@@ -1207,7 +1119,7 @@
             adminStatus.textContent = "Announcement sent to everyone currently using the app.";
         });
 
-        document.getElementById("enableNotifications").title = "Enable notifications and spoken chat";
+        document.getElementById("enableNotifications").title = "Enable browser notifications";
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
@@ -1231,7 +1143,6 @@
                 if (session?.user) setTimeout(() => { void openPartyApp(session.user); }, 0);
             }
         });
-        showNotificationPrompt();
     </script>
 </body>
 </html>
